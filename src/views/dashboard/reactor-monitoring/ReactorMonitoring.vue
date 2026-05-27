@@ -24,12 +24,44 @@
           {{ reactorData.core_temperature.toFixed(2) }}
         </span>
       </div>
+      <div>
+        <span class="text-surface-800 dark:text-surface-100 font-semibold mr-2"
+          >Radiation Level:
+        </span>
+        <span>
+          {{ reactorData.radiation_level.toFixed(2) }}
+        </span>
+      </div>
+      <div>
+        <span class="text-surface-800 dark:text-surface-100 font-semibold mr-2"
+          >Coolant Pressure:
+        </span>
+        <span>
+          {{ reactorData.coolant_pressure.toFixed(2) }}
+        </span>
+      </div>
+      <div>
+        <span class="text-surface-800 dark:text-surface-100 font-semibold mr-2"
+          >Coolant Flow Rate:
+        </span>
+        <span>
+          {{ reactorData.coolant_flow_rate.toFixed(2) }}
+        </span>
+      </div>
+      <div>
+        <span class="text-surface-800 dark:text-surface-100 font-semibold mr-2"
+          >Containment Integrity:
+        </span>
+        <span>
+          {{ reactorData.containment_integrity.toFixed(2) }}
+        </span>
+      </div>
     </div>
   </div>
 </template>
 <script setup>
 import { useAuthStore } from "@/stores/auth";
-import { ref } from "vue";
+import { onBeforeUnmount, ref } from "vue";
 
 const authStore = useAuthStore();
 const token = authStore.token;
@@ -40,4 +72,8 @@ ws.onmessage = (e) => {
   console.log(e);
   reactorData.value = JSON.parse(e.data);
 };
+
+onBeforeUnmount(() => {
+  ws.close();
+});
 </script>
