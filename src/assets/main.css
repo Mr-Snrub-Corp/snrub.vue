@@ -72,6 +72,11 @@
   --p-info-900: #1e3a8a;
   --p-info-950: #172554;
 
+  /* Google Brand */
+  --color-google: #db4437;
+  --color-google-hover: #c23321;
+  --color-google-active: #a82c1c;
+
   /* Warn (Amber) */
   --p-warn-25: #fffcf0;
   --p-warn-50: #fffbeb;

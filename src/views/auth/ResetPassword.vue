@@ -99,6 +99,7 @@
         </div>
         <Button
           label="Reset Password"
+          severity="primary"
           icon="pi pi-user"
           class="w-full py-2 rounded-lg flex justify-center items-center gap-2"
           @click="handleReset"

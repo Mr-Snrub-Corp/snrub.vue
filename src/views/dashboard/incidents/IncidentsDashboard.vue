@@ -9,7 +9,7 @@
           label="Incident Types"
           icon="pi pi-book"
           @click="router.push({ name: 'incidentTypes' })"
-          severity="primary"
+          severity="secondary"
         />
         <Button
           v-if="authStore.isAdmin"
@@ -17,7 +17,7 @@
           label="Incident Reports"
           icon="pi pi-exclamation-triangle"
           @click="router.push({ name: 'incidentReports' })"
-          severity="primary"
+          severity="secondary"
         />
       </div>
     </div>
