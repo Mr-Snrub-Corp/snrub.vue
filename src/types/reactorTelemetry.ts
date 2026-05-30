@@ -6,3 +6,5 @@ export interface ReactorTelemetry {
   coolant_flow_rate: number;
   containment_integrity: number;
 }
+
+export type ReactorStatus = "normal" | "warning" | "danger";

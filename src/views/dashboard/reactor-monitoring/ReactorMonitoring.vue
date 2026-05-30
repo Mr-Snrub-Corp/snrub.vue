@@ -8,6 +8,7 @@
 
     <div
       v-if="!hasData"
+      data-testid="reactor-monitoring.dashboard.loading-message"
       class="bg-surface-0 dark:bg-surface-900 p-6 shadow-sm rounded-2xl flex items-center gap-3"
     >
       <ProgressSpinner style="width: 1.5rem; height: 1.5rem" />
@@ -23,6 +24,7 @@
               Reactor Power
             </div>
             <div
+              data-testid="reactor-monitoring.reactor-power.kpi-value"
               class="text-3xl font-bold mt-1"
               :style="{ color: statusColor(reactorPowerStatus) }"
             >
@@ -40,10 +42,14 @@
             >
               <i class="pi pi-bolt" :style="{ color: statusColor(reactorPowerStatus) }" />
             </div>
-            <StatusBadge :status="reactorPowerStatus" />
+            <Tag
+              :severity="getReactorStatusSeverity(reactorPowerStatus)"
+              :value="formatLabel(reactorPowerStatus)"
+              data-testid="reactor-monitoring.reactor-power.status-badge"
+            />
           </div>
         </div>
-        <div class="h-40">
+        <div data-testid="reactor-monitoring.reactor-power.chart" class="h-40">
           <Chart type="line" :data="reactorPowerData" :options="reactorPowerOptions" class="h-full" />
         </div>
       </div>
@@ -56,6 +62,7 @@
               Core Temperature
             </div>
             <div
+              data-testid="reactor-monitoring.core-temperature.kpi-value"
               class="text-3xl font-bold mt-1"
               :style="{ color: statusColor(coreTemperatureStatus) }"
             >
@@ -73,10 +80,14 @@
             >
               <i class="pi pi-sun" :style="{ color: statusColor(coreTemperatureStatus) }" />
             </div>
-            <StatusBadge :status="coreTemperatureStatus" />
+            <Tag
+              :severity="getReactorStatusSeverity(coreTemperatureStatus)"
+              :value="formatLabel(coreTemperatureStatus)"
+              data-testid="reactor-monitoring.core-temperature.status-badge"
+            />
           </div>
         </div>
-        <div class="h-40">
+        <div data-testid="reactor-monitoring.core-temperature.chart" class="h-40">
           <Chart type="line" :data="coreTemperatureData" :options="coreTemperatureOptions" class="h-full" />
         </div>
       </div>
@@ -89,6 +100,7 @@
               Coolant Flow Rate
             </div>
             <div
+              data-testid="reactor-monitoring.coolant-flow-rate.kpi-value"
               class="text-3xl font-bold mt-1"
               :style="{ color: statusColor(coolantFlowStatus) }"
             >
@@ -106,10 +118,14 @@
             >
               <i class="pi pi-refresh" :style="{ color: statusColor(coolantFlowStatus) }" />
             </div>
-            <StatusBadge :status="coolantFlowStatus" />
+            <Tag
+              :severity="getReactorStatusSeverity(coolantFlowStatus)"
+              :value="formatLabel(coolantFlowStatus)"
+              data-testid="reactor-monitoring.coolant-flow-rate.status-badge"
+            />
           </div>
         </div>
-        <div class="h-40">
+        <div data-testid="reactor-monitoring.coolant-flow-rate.chart" class="h-40">
           <Chart type="line" :data="coolantFlowData" :options="coolantFlowOptions" class="h-full" />
         </div>
       </div>
@@ -122,6 +138,7 @@
               Coolant Pressure
             </div>
             <div
+              data-testid="reactor-monitoring.coolant-pressure.kpi-value"
               class="text-3xl font-bold mt-1"
               :style="{ color: statusColor(coolantPressureStatus) }"
             >
@@ -139,10 +156,14 @@
             >
               <i class="pi pi-sliders-h" :style="{ color: statusColor(coolantPressureStatus) }" />
             </div>
-            <StatusBadge :status="coolantPressureStatus" />
+            <Tag
+              :severity="getReactorStatusSeverity(coolantPressureStatus)"
+              :value="formatLabel(coolantPressureStatus)"
+              data-testid="reactor-monitoring.coolant-pressure.status-badge"
+            />
           </div>
         </div>
-        <div class="h-40">
+        <div data-testid="reactor-monitoring.coolant-pressure.chart" class="h-40">
           <Chart type="line" :data="coolantPressureData" :options="coolantPressureOptions" class="h-full" />
         </div>
       </div>
@@ -155,6 +176,7 @@
               Radiation Level
             </div>
             <div
+              data-testid="reactor-monitoring.radiation-level.kpi-value"
               class="text-3xl font-bold mt-1"
               :class="{ 'animate-pulse': radiationStatus === 'danger' }"
               :style="{ color: statusColor(radiationStatus) }"
@@ -174,10 +196,14 @@
             >
               <i class="pi pi-exclamation-triangle" :style="{ color: statusColor(radiationStatus) }" />
             </div>
-            <StatusBadge :status="radiationStatus" />
+            <Tag
+              :severity="getReactorStatusSeverity(radiationStatus)"
+              :value="formatLabel(radiationStatus)"
+              data-testid="reactor-monitoring.radiation-level.status-badge"
+            />
           </div>
         </div>
-        <div class="h-40">
+        <div data-testid="reactor-monitoring.radiation-level.chart" class="h-40">
           <Chart type="line" :data="radiationData" :options="radiationOptions" class="h-full" />
         </div>
       </div>
@@ -190,6 +216,7 @@
               Containment Integrity
             </div>
             <div
+              data-testid="reactor-monitoring.containment-integrity.kpi-value"
               class="text-3xl font-bold mt-1"
               :style="{ color: statusColor(containmentStatus) }"
             >
@@ -207,10 +234,17 @@
             >
               <i class="pi pi-shield" :style="{ color: statusColor(containmentStatus) }" />
             </div>
-            <StatusBadge :status="containmentStatus" />
+            <Tag
+              :severity="getReactorStatusSeverity(containmentStatus)"
+              :value="formatLabel(containmentStatus)"
+              data-testid="reactor-monitoring.containment-integrity.status-badge"
+            />
           </div>
         </div>
-        <div class="relative h-40 flex items-center justify-center">
+        <div
+          data-testid="reactor-monitoring.containment-integrity.chart"
+          class="relative h-40 flex items-center justify-center"
+        >
           <Chart
             type="doughnut"
             :data="containmentData"
@@ -234,37 +268,11 @@ import { computed, onBeforeUnmount, ref } from "vue";
 import type { Ref } from "vue";
 import Chart from "primevue/chart";
 import ProgressSpinner from "primevue/progressspinner";
+import Tag from "primevue/tag";
 import { useAuthStore } from "@/stores/auth";
-import type { ReactorTelemetry } from "@/types/reactorTelemetry";
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-type Status = "normal" | "warning" | "danger";
-
-// ─── Status badge sub-component ───────────────────────────────────────────────
-
-const StatusBadge = {
-  props: { status: String as () => Status },
-  template: `
-    <span
-      class="text-xs font-semibold px-2 py-0.5 rounded-full"
-      :style="badgeStyle"
-    >{{ label }}</span>
-  `,
-  setup(props: { status: Status }) {
-    const COLORS: Record<Status, { bg: string; text: string; label: string }> = {
-      normal:  { bg: "#dcfce7", text: "#166534", label: "Normal"  },
-      warning: { bg: "#fef3c7", text: "#92400e", label: "Warning" },
-      danger:  { bg: "#fee2e2", text: "#991b1b", label: "Danger"  },
-    };
-    const badgeStyle = computed(() => ({
-      background: COLORS[props.status].bg,
-      color: COLORS[props.status].text,
-    }));
-    const label = computed(() => COLORS[props.status].label);
-    return { badgeStyle, label };
-  },
-};
+import { formatLabel } from "@/utils";
+import { getReactorStatusSeverity } from "@/utils/reactor";
+import type { ReactorStatus, ReactorTelemetry } from "@/types/reactorTelemetry";
 
 // ─── WebSocket & buffers ──────────────────────────────────────────────────────
 
@@ -311,49 +319,49 @@ function cssVar(name: string): string {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 }
 
-const STATUS_COLOR: Record<Status, () => string> = {
+const STATUS_COLOR: Record<ReactorStatus, () => string> = {
   normal:  () => cssVar("--p-success-600"),
   warning: () => cssVar("--p-warn-600"),
   danger:  () => cssVar("--p-danger-600"),
 };
 
-const STATUS_BG: Record<Status, () => string> = {
+const STATUS_BG: Record<ReactorStatus, () => string> = {
   normal:  () => cssVar("--p-success-100"),
   warning: () => cssVar("--p-warn-100"),
   danger:  () => cssVar("--p-danger-100"),
 };
 
-function statusColor(s: Status): string { return STATUS_COLOR[s](); }
-function statusBg(s: Status): string    { return STATUS_BG[s](); }
+function statusColor(s: ReactorStatus): string { return STATUS_COLOR[s](); }
+function statusBg(s: ReactorStatus): string    { return STATUS_BG[s](); }
 
 // ─── Per-metric status computeds ─────────────────────────────────────────────
 
-const reactorPowerStatus = computed<Status>(() => {
+const reactorPowerStatus = computed<ReactorStatus>(() => {
   const v = reactorData.value.reactor_power ?? 0;
   return v > 110 ? "danger" : v > 100 ? "warning" : "normal";
 });
 
-const coreTemperatureStatus = computed<Status>(() => {
+const coreTemperatureStatus = computed<ReactorStatus>(() => {
   const v = reactorData.value.core_temperature ?? 0;
   return v > 1000 ? "danger" : v > 900 ? "warning" : "normal";
 });
 
-const radiationStatus = computed<Status>(() => {
+const radiationStatus = computed<ReactorStatus>(() => {
   const v = reactorData.value.radiation_level ?? 0;
   return v > 50 ? "danger" : v > 5 ? "warning" : "normal";
 });
 
-const coolantPressureStatus = computed<Status>(() => {
+const coolantPressureStatus = computed<ReactorStatus>(() => {
   const v = reactorData.value.coolant_pressure ?? 0;
   return v < 100 || v > 180 ? "danger" : v < 120 || v > 160 ? "warning" : "normal";
 });
 
-const coolantFlowStatus = computed<Status>(() => {
+const coolantFlowStatus = computed<ReactorStatus>(() => {
   const v = reactorData.value.coolant_flow_rate ?? 0;
   return v < 50 ? "danger" : v < 70 ? "warning" : "normal";
 });
 
-const containmentStatus = computed<Status>(() => {
+const containmentStatus = computed<ReactorStatus>(() => {
   const v = reactorData.value.containment_integrity ?? 100;
   return v < 85 ? "danger" : v < 95 ? "warning" : "normal";
 });
@@ -385,7 +393,7 @@ const radiationOptions       = makeLineOptions(0, 500);
 const coolantPressureOptions = makeLineOptions(0, 200);
 const coolantFlowOptions     = makeLineOptions(0, 100);
 
-function makeLineDataset(buf: Ref<number[]>, status: Status) {
+function makeLineDataset(buf: Ref<number[]>, status: ReactorStatus) {
   const color = statusColor(status);
   return {
     data: [...buf.value],
