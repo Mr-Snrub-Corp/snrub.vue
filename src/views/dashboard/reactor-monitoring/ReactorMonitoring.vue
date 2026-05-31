@@ -1,10 +1,8 @@
 <template>
   <div
-    class="px-6 py-4 md:px-12 md:py-6 lg:px-20 lg:py-8 bg-surface-50 dark:bg-surface-950 min-h-full"
+    class="px-6 py-4 md:px-12 md:py-6 lg:px-20 lg:py-8 bg-surface-50 dark:bg-surface-950 flex-1"
   >
-    <h1 class="text-3xl font-bold text-surface-900 dark:text-surface-0 mb-6">
-      Reactor Monitoring
-    </h1>
+    <h1 class="text-3xl font-bold text-surface-900 dark:text-surface-0 mb-6">Reactor Monitoring</h1>
 
     <Message
       v-if="connectionError"
@@ -27,9 +25,11 @@
     <div v-else-if="hasData" class="grid grid-cols-1 gap-6 md:grid-cols-2">
       <!-- Reactor Power -->
       <div class="bg-surface-0 dark:bg-surface-900 p-6 shadow-sm rounded-2xl flex flex-col gap-4">
-        <div class="flex justify-between items-start">
+        <div class="flex justify-between items-start gap-3">
           <div>
-            <div class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-widest">
+            <div
+              class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-widest"
+            >
               Reactor Power
             </div>
             <div
@@ -40,16 +40,13 @@
               {{ reactorData.reactor_power?.toFixed(1) }}
               <span class="text-base font-normal text-surface-400">%</span>
             </div>
-            <div class="text-xs mt-1" :style="{ color: statusColor(reactorPowerStatus) }">
-              Normal 85–100 · Warning 100–110 · Danger &gt;110
-            </div>
           </div>
-          <div class="flex flex-col items-end gap-2">
+          <div class="flex grow justify-between items-center gap-2">
             <div
-              class="w-10 h-10 rounded-lg flex items-center justify-center"
+              class="h-7 w-7 rounded-md flex items-center justify-center"
               :style="{ background: statusBg(reactorPowerStatus) }"
             >
-              <i class="pi pi-bolt" :style="{ color: statusColor(reactorPowerStatus) }" />
+              <i class="pi pi-bolt text-xs" :style="{ color: statusColor(reactorPowerStatus) }" />
             </div>
             <Tag
               :severity="getReactorStatusSeverity(reactorPowerStatus)"
@@ -59,15 +56,22 @@
           </div>
         </div>
         <div data-testid="reactor-monitoring.reactor-power.chart" class="h-40">
-          <Chart type="line" :data="reactorPowerData" :options="reactorPowerOptions" class="h-full" />
+          <Chart
+            type="line"
+            :data="reactorPowerData"
+            :options="reactorPowerOptions"
+            class="h-full"
+          />
         </div>
       </div>
 
       <!-- Core Temperature -->
       <div class="bg-surface-0 dark:bg-surface-900 p-6 shadow-sm rounded-2xl flex flex-col gap-4">
-        <div class="flex justify-between items-start">
+        <div class="flex justify-between items-start gap-3">
           <div>
-            <div class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-widest">
+            <div
+              class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-widest"
+            >
               Core Temperature
             </div>
             <div
@@ -78,16 +82,13 @@
               {{ reactorData.core_temperature?.toFixed(1) }}
               <span class="text-base font-normal text-surface-400">°C</span>
             </div>
-            <div class="text-xs mt-1" :style="{ color: statusColor(coreTemperatureStatus) }">
-              Normal 500–900 · Warning 900–1000 · Danger &gt;1000
-            </div>
           </div>
-          <div class="flex flex-col items-end gap-2">
+          <div class="flex grow justify-between items-center gap-2">
             <div
-              class="w-10 h-10 rounded-lg flex items-center justify-center"
+              class="h-7 w-7 rounded-md flex items-center justify-center"
               :style="{ background: statusBg(coreTemperatureStatus) }"
             >
-              <i class="pi pi-sun" :style="{ color: statusColor(coreTemperatureStatus) }" />
+              <i class="pi pi-sun text-xs" :style="{ color: statusColor(coreTemperatureStatus) }" />
             </div>
             <Tag
               :severity="getReactorStatusSeverity(coreTemperatureStatus)"
@@ -97,15 +98,22 @@
           </div>
         </div>
         <div data-testid="reactor-monitoring.core-temperature.chart" class="h-40">
-          <Chart type="line" :data="coreTemperatureData" :options="coreTemperatureOptions" class="h-full" />
+          <Chart
+            type="line"
+            :data="coreTemperatureData"
+            :options="coreTemperatureOptions"
+            class="h-full"
+          />
         </div>
       </div>
 
       <!-- Coolant Flow Rate -->
       <div class="bg-surface-0 dark:bg-surface-900 p-6 shadow-sm rounded-2xl flex flex-col gap-4">
-        <div class="flex justify-between items-start">
+        <div class="flex justify-between items-start gap-3">
           <div>
-            <div class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-widest">
+            <div
+              class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-widest"
+            >
               Coolant Flow Rate
             </div>
             <div
@@ -116,16 +124,13 @@
               {{ reactorData.coolant_flow_rate?.toFixed(1) }}
               <span class="text-base font-normal text-surface-400">%</span>
             </div>
-            <div class="text-xs mt-1" :style="{ color: statusColor(coolantFlowStatus) }">
-              Normal 70–100 · Warning 50–70 · Danger &lt;50
-            </div>
           </div>
-          <div class="flex flex-col items-end gap-2">
+          <div class="flex grow justify-between items-center gap-2">
             <div
-              class="w-10 h-10 rounded-lg flex items-center justify-center"
+              class="h-7 w-7 rounded-md flex items-center justify-center"
               :style="{ background: statusBg(coolantFlowStatus) }"
             >
-              <i class="pi pi-refresh" :style="{ color: statusColor(coolantFlowStatus) }" />
+              <i class="pi pi-refresh text-xs" :style="{ color: statusColor(coolantFlowStatus) }" />
             </div>
             <Tag
               :severity="getReactorStatusSeverity(coolantFlowStatus)"
@@ -141,9 +146,11 @@
 
       <!-- Coolant Pressure -->
       <div class="bg-surface-0 dark:bg-surface-900 p-6 shadow-sm rounded-2xl flex flex-col gap-4">
-        <div class="flex justify-between items-start">
+        <div class="flex justify-between items-start gap-3">
           <div>
-            <div class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-widest">
+            <div
+              class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-widest"
+            >
               Coolant Pressure
             </div>
             <div
@@ -154,16 +161,16 @@
               {{ reactorData.coolant_pressure?.toFixed(1) }}
               <span class="text-base font-normal text-surface-400">bar</span>
             </div>
-            <div class="text-xs mt-1" :style="{ color: statusColor(coolantPressureStatus) }">
-              Normal 120–160 · Warning 100–120 / 160–180 · Danger &lt;100 / &gt;180
-            </div>
           </div>
-          <div class="flex flex-col items-end gap-2">
+          <div class="flex grow justify-between items-center gap-2">
             <div
-              class="w-10 h-10 rounded-lg flex items-center justify-center"
+              class="h-7 w-7 rounded-md flex items-center justify-center"
               :style="{ background: statusBg(coolantPressureStatus) }"
             >
-              <i class="pi pi-sliders-h" :style="{ color: statusColor(coolantPressureStatus) }" />
+              <i
+                class="pi pi-sliders-h text-xs"
+                :style="{ color: statusColor(coolantPressureStatus) }"
+              />
             </div>
             <Tag
               :severity="getReactorStatusSeverity(coolantPressureStatus)"
@@ -173,15 +180,22 @@
           </div>
         </div>
         <div data-testid="reactor-monitoring.coolant-pressure.chart" class="h-40">
-          <Chart type="line" :data="coolantPressureData" :options="coolantPressureOptions" class="h-full" />
+          <Chart
+            type="line"
+            :data="coolantPressureData"
+            :options="coolantPressureOptions"
+            class="h-full"
+          />
         </div>
       </div>
 
       <!-- Radiation Level -->
       <div class="bg-surface-0 dark:bg-surface-900 p-6 shadow-sm rounded-2xl flex flex-col gap-4">
-        <div class="flex justify-between items-start">
+        <div class="flex justify-between items-start gap-3">
           <div>
-            <div class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-widest">
+            <div
+              class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-widest"
+            >
               Radiation Level
             </div>
             <div
@@ -193,17 +207,17 @@
               {{ reactorData.radiation_level?.toFixed(2) }}
               <span class="text-base font-normal text-surface-400">mSv/h</span>
             </div>
-            <div class="text-xs mt-1" :style="{ color: statusColor(radiationStatus) }">
-              Normal 0–5 · Warning 5–50 · Danger &gt;50
-            </div>
           </div>
-          <div class="flex flex-col items-end gap-2">
+          <div class="flex grow justify-between items-center gap-2">
             <div
-              class="w-10 h-10 rounded-lg flex items-center justify-center"
+              class="h-7 w-7 rounded-md flex items-center justify-center"
               :class="{ 'animate-pulse': radiationStatus === 'danger' }"
               :style="{ background: statusBg(radiationStatus) }"
             >
-              <i class="pi pi-exclamation-triangle" :style="{ color: statusColor(radiationStatus) }" />
+              <i
+                class="pi pi-exclamation-triangle text-xs"
+                :style="{ color: statusColor(radiationStatus) }"
+              />
             </div>
             <Tag
               :severity="getReactorStatusSeverity(radiationStatus)"
@@ -219,9 +233,11 @@
 
       <!-- Containment Integrity (Doughnut) -->
       <div class="bg-surface-0 dark:bg-surface-900 p-6 shadow-sm rounded-2xl flex flex-col gap-4">
-        <div class="flex justify-between items-start">
+        <div class="flex justify-between items-start gap-3">
           <div>
-            <div class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-widest">
+            <div
+              class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-widest"
+            >
               Containment Integrity
             </div>
             <div
@@ -232,16 +248,13 @@
               {{ reactorData.containment_integrity?.toFixed(1)
               }}<span class="text-base font-normal text-surface-400">%</span>
             </div>
-            <div class="text-xs mt-1" :style="{ color: statusColor(containmentStatus) }">
-              Normal 95–100 · Warning 85–95 · Danger &lt;85
-            </div>
           </div>
-          <div class="flex flex-col items-end gap-2">
+          <div class="flex grow justify-between items-center gap-2">
             <div
-              class="w-10 h-10 rounded-lg flex items-center justify-center"
+              class="h-7 w-7 rounded-md flex items-center justify-center"
               :style="{ background: statusBg(containmentStatus) }"
             >
-              <i class="pi pi-shield" :style="{ color: statusColor(containmentStatus) }" />
+              <i class="pi pi-shield text-xs" :style="{ color: statusColor(containmentStatus) }" />
             </div>
             <Tag
               :severity="getReactorStatusSeverity(containmentStatus)"
@@ -306,19 +319,23 @@ function cssVar(name: string): string {
 }
 
 const STATUS_COLOR: Record<ReactorStatus, () => string> = {
-  normal:  () => cssVar("--p-success-600"),
+  normal: () => cssVar("--p-success-600"),
   warning: () => cssVar("--p-warn-600"),
-  danger:  () => cssVar("--p-danger-600"),
+  danger: () => cssVar("--p-danger-600"),
 };
 
 const STATUS_BG: Record<ReactorStatus, () => string> = {
-  normal:  () => cssVar("--p-success-100"),
+  normal: () => cssVar("--p-success-100"),
   warning: () => cssVar("--p-warn-100"),
-  danger:  () => cssVar("--p-danger-100"),
+  danger: () => cssVar("--p-danger-100"),
 };
 
-function statusColor(s: ReactorStatus): string { return STATUS_COLOR[s](); }
-function statusBg(s: ReactorStatus): string    { return STATUS_BG[s](); }
+function statusColor(s: ReactorStatus): string {
+  return STATUS_COLOR[s]();
+}
+function statusBg(s: ReactorStatus): string {
+  return STATUS_BG[s]();
+}
 
 // ─── Per-metric status computeds ─────────────────────────────────────────────
 
@@ -373,11 +390,11 @@ function makeLineOptions(min: number, max: number) {
   };
 }
 
-const reactorPowerOptions    = makeLineOptions(0, 120);
+const reactorPowerOptions = makeLineOptions(0, 120);
 const coreTemperatureOptions = makeLineOptions(200, 1200);
-const radiationOptions       = makeLineOptions(0, 500);
+const radiationOptions = makeLineOptions(0, 500);
 const coolantPressureOptions = makeLineOptions(0, 200);
-const coolantFlowOptions     = makeLineOptions(0, 100);
+const coolantFlowOptions = makeLineOptions(0, 100);
 
 function makeLineDataset(buf: Ref<number[]>, status: ReactorStatus) {
   const color = statusColor(status);
@@ -441,7 +458,7 @@ const doughnutOptions = {
   responsive: true,
   maintainAspectRatio: false,
   plugins: {
-    legend:  { display: false },
+    legend: { display: false },
     tooltip: { enabled: false },
   },
   cutout: "70%",
