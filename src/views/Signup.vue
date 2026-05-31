@@ -62,7 +62,7 @@
         <Button
           @click="signup"
           label="Sign Up"
-          severity="secondary"
+          severity="primary"
           icon="pi pi-user"
           class="w-full p-4"
         />

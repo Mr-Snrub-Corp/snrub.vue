@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex justify-between items-center py-4 px-8 bg-surface-0 dark:bg-surface-900 relative lg:static border-b border-surface-200 dark:border-surface-700"
+    class="flex justify-between items-center h-16 px-8 bg-surface-0 dark:bg-surface-900 relative lg:static border-b border-surface-200 dark:border-surface-700 shrink-0"
   >
     <div class="flex items-center gap-4">
       <a

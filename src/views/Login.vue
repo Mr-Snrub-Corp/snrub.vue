@@ -63,9 +63,8 @@
           <Button
             @click="handleGoogleLogin"
             label="Sign in with Google"
-            severity="danger"
             icon="pi pi-google"
-            class="w-100 grow p-4 mt-2"
+            class="p-button-google w-100 grow p-4 mt-2"
           />
         </div>
       </div>

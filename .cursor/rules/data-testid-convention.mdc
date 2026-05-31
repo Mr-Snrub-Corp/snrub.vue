@@ -26,6 +26,7 @@ All three segments are **required**. Use kebab-case within each segment. Separat
 - **Unique**: the full three-part string must be unique within the domain
 - **Consistent element suffixes**: use `‑btn` for buttons, `‑input` for text/number/date inputs, `‑select` for dropdowns, `‑table` for tables, `‑link` for navigation anchors/router-links, `‑message` for inline feedback, `‑dialog` for modals
 - **Framework-agnostic**: the same convention applies to Vue, React, and Angular repos; copy this rule verbatim
+- **Bindings**: prefer static literals (`data-testid="..."`) in templates. Bindings (`:data-testid`) are acceptable only when the value is a fixed string from static config (e.g. `navItems.ts`). The rendered DOM value must still be stable and match the registered test ID. Bindings that incorporate runtime or user data are forbidden.
 
 ## Examples
 
@@ -39,6 +40,9 @@ All three segments are **required**. Use kebab-case within each segment. Separat
 <!-- Navigation -->
 <a data-testid="nav.sidebar.home-link" />
 <a data-testid="nav.sidebar.logout-btn" />
+
+<!-- Navigation via static config (e.g. navItems.ts) — binding OK -->
+<RouterLink :data-testid="item.testId" /> <!-- item.testId is a fixed string in navItems.ts -->
 
 <!-- Employees feature -->
 <button data-testid="employees.list.add-btn" />
@@ -61,6 +65,118 @@ this.submitButton = page.getByTestId('auth.login-form.sign-in-btn')
 ## Do Not
 
 - Use the old flat kebab-case format: ~~`data-testid="email-input"`~~
-- Embed dynamic values: ~~`data-testid="`employee-${uid}`"`~~
+- Embed dynamic values: ~~`data-testid="`employee-${uid}`"`~~ or ~~`:data-testid="\`employee-${uid}-delete-btn\`"`~~
+- Bind runtime or user data: ~~`:data-testid="item.id"`~~, ~~`:data-testid="index"`~~
 - Omit any of the three segments: ~~`data-testid="login.email-input"`~~
 - Use underscores or camelCase: ~~`data-testid="auth.loginForm.emailInput"`~~
+
+---
+
+## Registered Test IDs (by view)
+
+Keep this section up to date whenever a new `data-testid` is added or removed.
+
+### Navigation — `src/components/dashboard/DashboardSidebar.vue` · `src/components/dashboard/navItems.ts`
+
+| Test ID | Element |
+|---|---|
+| `nav.sidebar.home-link` | Home nav link |
+| `nav.sidebar.employees-link` | Employees nav link |
+| `nav.sidebar.incidents-link` | Incidents nav link |
+| `nav.sidebar.design-link` | Design nav link |
+| `nav.sidebar.reporting-link` | Reporting nav link |
+| `nav.sidebar.reactor-monitoring-link` | Reactor Monitoring nav link |
+| `nav.sidebar.logout-btn` | Logout button |
+
+### Auth — `src/views/Login.vue`
+
+| Test ID | Element |
+|---|---|
+| `auth.login-form.email-input` | Email input |
+| `auth.login-form.password-input` | Password input |
+| `auth.login-form.forgot-password-btn` | Forgot password link-button |
+| `auth.login-form.sign-in-btn` | Sign in submit button |
+| `auth.login-form.error-message` | Inline error message |
+
+### Auth — `src/views/ForgotPassword.vue`
+
+| Test ID | Element |
+|---|---|
+| `auth.forgot-password-form.email-input` | Email input |
+| `auth.forgot-password-form.back-to-login-btn` | Back to login button |
+| `auth.forgot-password-form.submit-btn` | Submit button |
+
+### Employees — `src/views/dashboard/employees/Employees.vue`
+
+| Test ID | Element |
+|---|---|
+| `employees.list.add-btn` | Add employee button |
+| `employees.list.table` | Employees data table |
+| `employees.list.delete-btn` | Per-row delete button |
+| `employees.list.view-btn` | Per-row view/detail button |
+
+### Employees — `src/views/dashboard/employees/EmployeeDetail.vue`
+
+| Test ID | Element |
+|---|---|
+| `employees.detail.edit-btn` | Edit button |
+| `employees.detail.name` | Employee name display |
+| `employees.detail.email` | Employee email display |
+| `employees.detail.role` | Employee role tag |
+| `employees.detail.status` | Employee status tag |
+| `employees.detail.back-btn` | Back button |
+
+### Employees — `src/views/dashboard/employees/EmployeeNew.vue`
+
+| Test ID | Element |
+|---|---|
+| `employees.new-form.email-input` | Email input |
+| `employees.new-form.name-input` | Name input |
+| `employees.new-form.role-select` | Role dropdown |
+| `employees.new-form.status-select` | Status dropdown |
+| `employees.new-form.password-input` | Password input |
+| `employees.new-form.create-btn` | Create employee submit button |
+| `employees.new-form.cancel-btn` | Cancel button |
+
+### Employees — `src/views/dashboard/employees/EmployeeEdit.vue`
+
+| Test ID | Element |
+|---|---|
+| `employees.edit-form.email-input` | Email input |
+| `employees.edit-form.name-input` | Name input |
+| `employees.edit-form.role-select` | Role dropdown |
+| `employees.edit-form.status-select` | Status dropdown |
+| `employees.edit-form.update-btn` | Update/save button |
+| `employees.edit-form.cancel-btn` | Cancel button |
+
+### Incidents — `src/views/dashboard/incidents/IncidentTypes.vue`
+
+| Test ID | Element |
+|---|---|
+| `incidents.types.category-group` | Category group container |
+| `incidents.types.table` | Incident types data table |
+
+### Reactor Monitoring — `src/views/dashboard/reactor-monitoring/ReactorMonitoring.vue`
+
+| Test ID | Element |
+|---|---|
+| `reactor-monitoring.dashboard.loading-message` | "Awaiting telemetry" loading state |
+| `reactor-monitoring.dashboard.error-message` | Telemetry connection / parse error message |
+| `reactor-monitoring.reactor-power.kpi-value` | Reactor power current value |
+| `reactor-monitoring.reactor-power.status-badge` | Reactor power status badge |
+| `reactor-monitoring.reactor-power.chart` | Reactor power line chart container |
+| `reactor-monitoring.core-temperature.kpi-value` | Core temperature current value |
+| `reactor-monitoring.core-temperature.status-badge` | Core temperature status badge |
+| `reactor-monitoring.core-temperature.chart` | Core temperature line chart container |
+| `reactor-monitoring.coolant-flow-rate.kpi-value` | Coolant flow rate current value |
+| `reactor-monitoring.coolant-flow-rate.status-badge` | Coolant flow rate status badge |
+| `reactor-monitoring.coolant-flow-rate.chart` | Coolant flow rate line chart container |
+| `reactor-monitoring.coolant-pressure.kpi-value` | Coolant pressure current value |
+| `reactor-monitoring.coolant-pressure.status-badge` | Coolant pressure status badge |
+| `reactor-monitoring.coolant-pressure.chart` | Coolant pressure line chart container |
+| `reactor-monitoring.radiation-level.kpi-value` | Radiation level current value |
+| `reactor-monitoring.radiation-level.status-badge` | Radiation level status badge |
+| `reactor-monitoring.radiation-level.chart` | Radiation level line chart container |
+| `reactor-monitoring.containment-integrity.kpi-value` | Containment integrity current value |
+| `reactor-monitoring.containment-integrity.status-badge` | Containment integrity status badge |
+| `reactor-monitoring.containment-integrity.chart` | Containment integrity doughnut chart container |

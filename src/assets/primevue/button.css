@@ -322,6 +322,29 @@
         dark:text-surface-0 dark:enabled:hover:text-surface-0 dark:enabled:active:text-surface-0
 }
 
+.p-button-google {
+    background-color: var(--color-google);
+    border-color: var(--color-google);
+    color: var(--p-surface-0);
+}
+
+.p-button-google:enabled:hover {
+    background-color: var(--color-google-hover);
+    border-color: var(--color-google-hover);
+    color: var(--p-surface-0);
+}
+
+.p-button-google:enabled:active {
+    background-color: var(--color-google-active);
+    border-color: var(--color-google-active);
+    color: var(--p-surface-0);
+}
+
+.p-button-google:focus-visible {
+    outline: 1px solid var(--color-google);
+    outline-offset: 2px;
+}
+
 .p-button-link {
     @apply bg-transparent enabled:hover:bg-transparent enabled:active:bg-transparent
         border-transparent enabled:hover:border-transparent enabled:active:border-transparent

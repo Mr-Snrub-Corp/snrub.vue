@@ -21,7 +21,6 @@
               variant="outlined"
               disabled
               type="button"
-              outlined
             />
           </div>
         </div>

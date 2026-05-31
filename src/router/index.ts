@@ -110,6 +110,11 @@ const router = createRouter({
           component: () => import("@/views/dashboard/reporting/Reporting.vue"),
         },
         {
+          path: "reactor-monitoring",
+          name: "reactorMonitoring",
+          component: () => import("@/views/dashboard/reactor-monitoring/ReactorMonitoring.vue"),
+        },
+        {
           path: "design",
           name: "design",
           component: () => import("@/views/dashboard/design/DesignIndex.vue"),

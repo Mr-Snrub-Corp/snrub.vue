@@ -47,9 +47,8 @@ async function handleResponse(response: Response) {
 
     let errorMessage = "Something went wrong";
 
-    // Handle authentication errors (401 or 403)
     if (response.status === 401) {
-      console.log("Authentication error, redirecting to login");
+      useAuthStore().$reset();
       router.push({ name: "Login" });
     }
 

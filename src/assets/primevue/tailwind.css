@@ -34,6 +34,7 @@
 @import './splitbutton';
 
 /* Data */
+@import './chart';
 @import './datatable';
 @import './dataview';
 @import './paginator';

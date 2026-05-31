@@ -18,6 +18,7 @@
               v-model="formData.email"
               type="email"
               class="w-full"
+              data-testid="employees.new-form.email-input"
               :invalid="v$.email.$error"
               @blur="v$.email.$touch()"
             />
@@ -33,6 +34,7 @@
               v-model="formData.name"
               type="text"
               class="w-full"
+              data-testid="employees.new-form.name-input"
               :invalid="v$.name.$error"
               @blur="v$.name.$touch()"
             />
@@ -51,6 +53,7 @@
               option-value="value"
               placeholder="Select a role"
               class="w-full"
+              data-testid="employees.new-form.role-select"
               :invalid="v$.role.$error"
               @blur="v$.role.$touch()"
             />
@@ -71,6 +74,7 @@
               option-value="value"
               placeholder="Select employee status"
               class="w-full"
+              data-testid="employees.new-form.status-select"
               :invalid="v$.status.$error"
               @blur="v$.status.$touch()"
             />
@@ -86,6 +90,7 @@
               v-model="formData.password"
               class="w-full"
               input-class="w-full"
+              data-testid="employees.new-form.password-input"
               toggle-mask
               :invalid="v$.password.$error"
               @blur="v$.password.$touch()"
@@ -100,10 +105,17 @@
           <Button
             label="Create Employee"
             severity="primary"
+            data-testid="employees.new-form.create-btn"
             :disabled="v$.$invalid"
             @click="handleSubmit"
           />
-          <Button label="Cancel" severity="secondary" variant="outlined" @click="handleCancel" />
+          <Button
+            label="Cancel"
+            severity="secondary"
+            variant="outlined"
+            data-testid="employees.new-form.cancel-btn"
+            @click="handleCancel"
+          />
         </div>
       </div>
     </div>
