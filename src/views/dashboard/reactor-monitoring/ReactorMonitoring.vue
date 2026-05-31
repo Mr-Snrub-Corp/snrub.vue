@@ -6,8 +6,17 @@
       Reactor Monitoring
     </h1>
 
+    <Message
+      v-if="connectionError"
+      class="mb-6"
+      severity="warn"
+      data-testid="reactor-monitoring.dashboard.error-message"
+    >
+      {{ connectionError }}
+    </Message>
+
     <div
-      v-if="!hasData"
+      v-if="!hasData && !connectionError"
       data-testid="reactor-monitoring.dashboard.loading-message"
       class="bg-surface-0 dark:bg-surface-900 p-6 shadow-sm rounded-2xl flex items-center gap-3"
     >
@@ -15,7 +24,7 @@
       <span class="text-surface-500 dark:text-surface-400">Awaiting telemetry…</span>
     </div>
 
-    <div v-else class="grid grid-cols-1 gap-6 md:grid-cols-2">
+    <div v-else-if="hasData" class="grid grid-cols-1 gap-6 md:grid-cols-2">
       <!-- Reactor Power -->
       <div class="bg-surface-0 dark:bg-surface-900 p-6 shadow-sm rounded-2xl flex flex-col gap-4">
         <div class="flex justify-between items-start">
@@ -264,22 +273,27 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import type { Ref } from "vue";
 import Chart from "primevue/chart";
+import Message from "primevue/message";
 import ProgressSpinner from "primevue/progressspinner";
 import Tag from "primevue/tag";
 import { useAuthStore } from "@/stores/auth";
 import { formatLabel } from "@/utils";
-import { getReactorStatusSeverity } from "@/utils/reactor";
+import { getReactorStatusSeverity, parseReactorTelemetry } from "@/utils/reactor";
 import type { ReactorStatus, ReactorTelemetry } from "@/types/reactorTelemetry";
 
 // ─── WebSocket & buffers ──────────────────────────────────────────────────────
 
 const MAX_POINTS = 50;
+const BASE_RECONNECT_MS = 1000;
+const MAX_RECONNECT_MS = 30000;
+
 const authStore = useAuthStore();
 const reactorData = ref<Partial<ReactorTelemetry>>({});
 const hasData = ref(false);
+const connectionError = ref<string | null>(null);
 
 const labels = ref<string[]>([]);
 const reactorPowerBuf = ref<number[]>([]);
@@ -288,17 +302,20 @@ const radiationBuf = ref<number[]>([]);
 const coolantPressureBuf = ref<number[]>([]);
 const coolantFlowBuf = ref<number[]>([]);
 
+let ws: WebSocket | null = null;
+let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
+let reconnectAttempt = 0;
+let intentionalClose = false;
+
 function pushBuf(buf: Ref<number[]>, value: number): void {
   buf.value.push(value);
   if (buf.value.length > MAX_POINTS) buf.value.shift();
 }
 
-const ws = new WebSocket(`ws://localhost:8000/api/ws/telemetry?token=${authStore.token}`);
-
-ws.onmessage = (e: MessageEvent) => {
-  const data = JSON.parse(e.data as string) as ReactorTelemetry;
+function applyTelemetry(data: ReactorTelemetry): void {
   reactorData.value = data;
   hasData.value = true;
+  connectionError.value = null;
 
   const label = new Date().toLocaleTimeString("en-AU", { hour12: false });
   labels.value.push(label);
@@ -309,9 +326,68 @@ ws.onmessage = (e: MessageEvent) => {
   pushBuf(radiationBuf, data.radiation_level);
   pushBuf(coolantPressureBuf, data.coolant_pressure);
   pushBuf(coolantFlowBuf, data.coolant_flow_rate);
-};
+}
 
-onBeforeUnmount(() => ws.close());
+function handleMessage(e: MessageEvent): void {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(e.data as string);
+  } catch {
+    return;
+  }
+
+  const data = parseReactorTelemetry(parsed);
+  if (!data) return;
+
+  applyTelemetry(data);
+}
+
+function scheduleReconnect(): void {
+  if (intentionalClose) return;
+
+  const delay = Math.min(BASE_RECONNECT_MS * 2 ** reconnectAttempt, MAX_RECONNECT_MS);
+  reconnectAttempt += 1;
+  connectionError.value = hasData.value
+    ? "Telemetry connection lost. Reconnecting…"
+    : "Unable to connect to telemetry. Reconnecting…";
+
+  reconnectTimer = setTimeout(connectWebSocket, delay);
+}
+
+function connectWebSocket(): void {
+  if (intentionalClose) return;
+
+  reconnectTimer = null;
+  ws?.close();
+  ws = new WebSocket(`ws://localhost:8000/api/ws/telemetry?token=${authStore.token}`);
+
+  ws.onopen = () => {
+    reconnectAttempt = 0;
+    if (hasData.value) connectionError.value = null;
+  };
+
+  ws.onmessage = handleMessage;
+
+  ws.onerror = () => {
+    connectionError.value = hasData.value
+      ? "Telemetry connection error. Reconnecting…"
+      : "Unable to connect to telemetry.";
+  };
+
+  ws.onclose = () => {
+    ws = null;
+    if (intentionalClose) return;
+    scheduleReconnect();
+  };
+}
+
+onMounted(connectWebSocket);
+
+onBeforeUnmount(() => {
+  intentionalClose = true;
+  if (reconnectTimer !== null) clearTimeout(reconnectTimer);
+  ws?.close();
+});
 
 // ─── Status helpers ───────────────────────────────────────────────────────────
 

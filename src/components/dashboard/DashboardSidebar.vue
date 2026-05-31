@@ -35,14 +35,14 @@
     </div>
     <div class="p-3 border-r border-surface-800">
       <hr class="border-t border-surface-800 mb-3" />
-      <a
+      <button
         @click="$emit('logout')"
         class="w-full flex flex-row items-center cursor-pointer px-3 py-2 rounded-lg border border-transparent text-surface-400 hover:bg-surface-800 hover:border-surface-700 hover:text-surface-0 transition-colors duration-150 group gap-3"
         data-testid="nav.sidebar.logout-btn"
       >
-        <i class="pi pi-sign-out text-lg! leading-none! shrink-0" />
-        <span class="font-medium text-sm leading-tight">Logout</span>
-      </a>
+        <i class="pi pi-sign-out text-lg! leading-none! shrink-0 text-surface-400 group-hover:text-surface-0" />
+        <span class="font-medium text-sm leading-tight truncate">Logout</span>
+      </button>
     </div>
   </div>
 </template>

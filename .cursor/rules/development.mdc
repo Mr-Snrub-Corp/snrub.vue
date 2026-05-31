@@ -18,6 +18,12 @@ In all interactions and commit messages, be extremely concise and sacrifice gram
 - Use Tailwind v3 utility classes.
 - Enterprise best practices. Interfaces in `types/`, derived from constants when appropriate. Reused patterns in composables, not components.
 
+## TODO / FIXME / HACK Comments
+
+- NEVER remove a `TODO`, `FIXME`, or `HACK` comment. These mark known issues the developer has not yet resolved.
+- If a task appears to address the concern a TODO describes, ask the developer before removing it.
+- When moving code to a new file or composable, carry all TODO/FIXME/HACK comments with it verbatim.
+
 ## No Speculative or "Convenience" Code
 
 - Do NOT add code that is not immediately used. Every line must be called or referenced.

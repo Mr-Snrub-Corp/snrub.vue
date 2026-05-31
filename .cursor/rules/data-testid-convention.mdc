@@ -161,6 +161,7 @@ Keep this section up to date whenever a new `data-testid` is added or removed.
 | Test ID | Element |
 |---|---|
 | `reactor-monitoring.dashboard.loading-message` | "Awaiting telemetry" loading state |
+| `reactor-monitoring.dashboard.error-message` | Telemetry connection / parse error message |
 | `reactor-monitoring.reactor-power.kpi-value` | Reactor power current value |
 | `reactor-monitoring.reactor-power.status-badge` | Reactor power status badge |
 | `reactor-monitoring.reactor-power.chart` | Reactor power line chart container |
