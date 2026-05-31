@@ -92,14 +92,28 @@ export function useReactorTelemetry() {
       ? "Telemetry connection lost. Reconnecting…"
       : "Unable to connect to telemetry. Reconnecting…";
 
+    if (reconnectTimer !== null) clearTimeout(reconnectTimer);
     reconnectTimer = setTimeout(connectWebSocket, delay);
   }
 
   function connectWebSocket(): void {
     if (intentionalClose) return;
 
-    reconnectTimer = null;
-    ws?.close();
+    if (reconnectTimer !== null) {
+      clearTimeout(reconnectTimer);
+      reconnectTimer = null;
+    }
+
+    // Detach handlers from any prior socket before closing it so its async
+    // onclose/onerror cannot mutate shared state or schedule a duplicate reconnect.
+    if (ws !== null) {
+      const oldWs = ws;
+      oldWs.onopen = null;
+      oldWs.onmessage = null;
+      oldWs.onerror = null;
+      oldWs.onclose = null;
+      oldWs.close();
+    }
 
     // Derive the WebSocket base URL from VITE_API_URL by swapping the protocol.
     const wsBase = import.meta.env.VITE_API_URL.replace(/^http/, "ws");
@@ -110,22 +124,28 @@ export function useReactorTelemetry() {
     // used elsewhere. This bypass increases the risk of inconsistent/incorrect validation
     // and also raises token leakage risk because query parameters are commonly logged or
     // persisted.
-    ws = new WebSocket(`${wsBase}/ws/telemetry?token=${authStore.token}`);
+    // TODO: Stale-socket races are currently guarded via the `ws !== socket` identity check
+    // below. If this lifecycle grows more complex, consider a monotonic connection id and/or
+    // a dedicated connection-state machine for more robust ownership tracking.
+    const socket = new WebSocket(`${wsBase}/ws/telemetry?token=${authStore.token}`);
+    ws = socket;
 
-    ws.onopen = () => {
+    socket.onopen = () => {
       reconnectAttempt = 0;
       if (hasData.value) connectionError.value = null;
     };
 
-    ws.onmessage = handleMessage;
+    socket.onmessage = handleMessage;
 
-    ws.onerror = () => {
+    socket.onerror = () => {
+      if (ws !== socket) return;
       connectionError.value = hasData.value
         ? "Telemetry connection error. Reconnecting…"
         : "Unable to connect to telemetry.";
     };
 
-    ws.onclose = () => {
+    socket.onclose = () => {
+      if (ws !== socket) return;
       ws = null;
       if (intentionalClose) return;
       scheduleReconnect();
