@@ -325,19 +325,19 @@
 .p-button-google {
     background-color: var(--color-google);
     border-color: var(--color-google);
-    color: #ffffff;
+    color: var(--p-surface-0);
 }
 
 .p-button-google:enabled:hover {
     background-color: var(--color-google-hover);
     border-color: var(--color-google-hover);
-    color: #ffffff;
+    color: var(--p-surface-0);
 }
 
 .p-button-google:enabled:active {
     background-color: var(--color-google-active);
     border-color: var(--color-google-active);
-    color: #ffffff;
+    color: var(--p-surface-0);
 }
 
 .p-button-google:focus-visible {

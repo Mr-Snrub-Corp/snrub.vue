@@ -273,124 +273,34 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { computed } from "vue";
 import type { Ref } from "vue";
 import Chart from "primevue/chart";
 import Message from "primevue/message";
 import ProgressSpinner from "primevue/progressspinner";
 import Tag from "primevue/tag";
-import { useAuthStore } from "@/stores/auth";
 import { formatLabel } from "@/utils";
-import { getReactorStatusSeverity, parseReactorTelemetry } from "@/utils/reactor";
-import type { ReactorStatus, ReactorTelemetry } from "@/types/reactorTelemetry";
+import { getReactorStatusSeverity } from "@/utils/reactor";
+import type { ReactorStatus } from "@/types/reactorTelemetry";
+import { useReactorTelemetry } from "@/composables/useReactorTelemetry";
 
-// ─── WebSocket & buffers ──────────────────────────────────────────────────────
-
-const MAX_POINTS = 50;
-const BASE_RECONNECT_MS = 1000;
-const MAX_RECONNECT_MS = 30000;
-
-const authStore = useAuthStore();
-const reactorData = ref<Partial<ReactorTelemetry>>({});
-const hasData = ref(false);
-const connectionError = ref<string | null>(null);
-
-const labels = ref<string[]>([]);
-const reactorPowerBuf = ref<number[]>([]);
-const coreTemperatureBuf = ref<number[]>([]);
-const radiationBuf = ref<number[]>([]);
-const coolantPressureBuf = ref<number[]>([]);
-const coolantFlowBuf = ref<number[]>([]);
-
-let ws: WebSocket | null = null;
-let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
-let reconnectAttempt = 0;
-let intentionalClose = false;
-
-function pushBuf(buf: Ref<number[]>, value: number): void {
-  buf.value.push(value);
-  if (buf.value.length > MAX_POINTS) buf.value.shift();
-}
-
-function applyTelemetry(data: ReactorTelemetry): void {
-  reactorData.value = data;
-  hasData.value = true;
-  connectionError.value = null;
-
-  const label = new Date().toLocaleTimeString("en-AU", { hour12: false });
-  labels.value.push(label);
-  if (labels.value.length > MAX_POINTS) labels.value.shift();
-
-  pushBuf(reactorPowerBuf, data.reactor_power);
-  pushBuf(coreTemperatureBuf, data.core_temperature);
-  pushBuf(radiationBuf, data.radiation_level);
-  pushBuf(coolantPressureBuf, data.coolant_pressure);
-  pushBuf(coolantFlowBuf, data.coolant_flow_rate);
-}
-
-function handleMessage(e: MessageEvent): void {
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(e.data as string);
-  } catch {
-    return;
-  }
-
-  const data = parseReactorTelemetry(parsed);
-  if (!data) return;
-
-  applyTelemetry(data);
-}
-
-function scheduleReconnect(): void {
-  if (intentionalClose) return;
-
-  const delay = Math.min(BASE_RECONNECT_MS * 2 ** reconnectAttempt, MAX_RECONNECT_MS);
-  reconnectAttempt += 1;
-  connectionError.value = hasData.value
-    ? "Telemetry connection lost. Reconnecting…"
-    : "Unable to connect to telemetry. Reconnecting…";
-
-  reconnectTimer = setTimeout(connectWebSocket, delay);
-}
-
-function connectWebSocket(): void {
-  if (intentionalClose) return;
-
-  reconnectTimer = null;
-  ws?.close();
-  ws = new WebSocket(`ws://localhost:8000/api/ws/telemetry?token=${authStore.token}`);
-
-  ws.onopen = () => {
-    reconnectAttempt = 0;
-    if (hasData.value) connectionError.value = null;
-  };
-
-  ws.onmessage = handleMessage;
-
-  ws.onerror = () => {
-    connectionError.value = hasData.value
-      ? "Telemetry connection error. Reconnecting…"
-      : "Unable to connect to telemetry.";
-  };
-
-  ws.onclose = () => {
-    ws = null;
-    if (intentionalClose) return;
-    scheduleReconnect();
-  };
-}
-
-onMounted(connectWebSocket);
-
-onBeforeUnmount(() => {
-  intentionalClose = true;
-  if (reconnectTimer !== null) clearTimeout(reconnectTimer);
-  ws?.close();
-});
+const {
+  reactorData,
+  hasData,
+  connectionError,
+  labels,
+  reactorPowerBuffer,
+  coreTemperatureBuffer,
+  radiationBuffer,
+  coolantPressureBuffer,
+  coolantFlowBuffer,
+} = useReactorTelemetry();
 
 // ─── Status helpers ───────────────────────────────────────────────────────────
 
+// Chart.js does not resolve CSS custom properties — it needs concrete color strings.
+// cssVar reads the computed value from the document root at call time so design
+// tokens reach Chart.js datasets and scale options.
 function cssVar(name: string): string {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 }
@@ -486,27 +396,27 @@ function makeLineDataset(buf: Ref<number[]>, status: ReactorStatus) {
 
 const reactorPowerData = computed(() => ({
   labels: [...labels.value],
-  datasets: [makeLineDataset(reactorPowerBuf, reactorPowerStatus.value)],
+  datasets: [makeLineDataset(reactorPowerBuffer, reactorPowerStatus.value)],
 }));
 
 const coreTemperatureData = computed(() => ({
   labels: [...labels.value],
-  datasets: [makeLineDataset(coreTemperatureBuf, coreTemperatureStatus.value)],
+  datasets: [makeLineDataset(coreTemperatureBuffer, coreTemperatureStatus.value)],
 }));
 
 const radiationData = computed(() => ({
   labels: [...labels.value],
-  datasets: [makeLineDataset(radiationBuf, radiationStatus.value)],
+  datasets: [makeLineDataset(radiationBuffer, radiationStatus.value)],
 }));
 
 const coolantPressureData = computed(() => ({
   labels: [...labels.value],
-  datasets: [makeLineDataset(coolantPressureBuf, coolantPressureStatus.value)],
+  datasets: [makeLineDataset(coolantPressureBuffer, coolantPressureStatus.value)],
 }));
 
 const coolantFlowData = computed(() => ({
   labels: [...labels.value],
-  datasets: [makeLineDataset(coolantFlowBuf, coolantFlowStatus.value)],
+  datasets: [makeLineDataset(coolantFlowBuffer, coolantFlowStatus.value)],
 }));
 
 // ─── Containment integrity doughnut ──────────────────────────────────────────
