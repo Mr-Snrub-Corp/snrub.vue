@@ -1,60 +1,62 @@
-# mot.frontend
+# snrub.client
 
-This template should help get you started developing with Vue 3 in Vite.
+Vue 3 frontend for the Snrub platform. Built with Vite, TypeScript, PrimeVue, Tailwind CSS, and Pinia.
 
-## Recommended IDE Setup
+## Project Structure
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
+```
+src/
+├── assets/       # Static assets, CSS, PrimeVue component styles
+├── components/   # Reusable Vue components
+├── composables/  # Shared composition functions
+├── constants/    # App-wide constants
+├── router/       # Vue Router configuration
+├── services/     # API services and HTTP client
+├── stores/       # Pinia state management
+├── types/        # TypeScript type definitions
+├── utils/        # Utility helpers
+└── views/        # Page-level components (auth/, dashboard/, etc.)
+public/           # Public static assets
 ```
 
-### Compile and Hot-Reload for Development
+## Local development
 
-```sh
-npm run dev
-```
+This repo is run as the **Vue frontend** alongside the API. Docker Compose lives in [snrub.api](https://github.com/Mr-Snrub-Corp/snrub.api) — see its [README](https://github.com/Mr-Snrub-Corp/snrub.api#local-development) for full setup.
 
-### Type-Check, Compile and Minify for Production
+1. Clone both repos into adjacent folders:
 
-```sh
-npm run build
-```
+   ```
+   parent/
+   ├── snrub.api/
+   └── snrub.client/
+   ```
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+2. Follow the snrub.api local development steps (env file, Docker Compose, migrations, etc.).
 
-```sh
-npm run test:unit
-```
+3. Start the stack with the Vue profile:
 
-### End-to-End Tests
+   ```bash
+   COMPOSE_PROFILES=vue docker compose up -d --build
+   ```
+
+   Or set `COMPOSE_PROFILES=vue` in the `.env` next to `docker-compose.yaml` in snrub.api.
+
+The client is served by Docker as part of that stack at http://localhost:5173. API docs: http://localhost:8000/docs
+
+## Scripts
+
+| Command             | Description                    |
+| ------------------- | ------------------------------ |
+| `npm run dev`       | Vite dev server with HMR       |
+| `npm run build`     | Typecheck and production build |
+| `npm run lint`      | ESLint                         |
+| `npm run test:unit` | Vitest unit tests              |
+| `npm run preview`   | Preview production build       |
+
+## End-to-End Tests
 
 E2E tests live in [`Mr-Snrub-Corp/snrub.e2e`](https://github.com/Mr-Snrub-Corp/snrub.e2e) — not this repo. This allows the same test suite to run against the Vue, React, and Angular versions of the app.
 
 On pull request, `.github/workflows/e2e.yml` dispatches a `client-pr` event to `snrub.e2e` with the branch name. Results appear in the `snrub.e2e` Actions tab.
 
 > **TODO:** report E2E pass/fail back to the client PR via the GitHub commit status API.
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
-
-## Next dev steps
-
-// need to modify the httpService.ts to properly handle HTTP error status codes.
-// setup some error interceptor
-
-// fiel upload validation (dimensions, size, format)
