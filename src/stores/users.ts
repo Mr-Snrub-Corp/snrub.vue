@@ -72,7 +72,9 @@ export const useUsersStore = defineStore("users", () => {
       const formData = new FormData();
       formData.append("file", file);
       const response = await api.users.uploadPhoto(uid, formData);
-      await fetchUserById(uid);
+      fetchUserById(uid).catch((err) =>
+        console.error(`Error refreshing user ${uid} after photo upload:`, err),
+      );
       return response;
     } catch (err) {
       console.error(`Error uploading photo for user ${uid}:`, err);

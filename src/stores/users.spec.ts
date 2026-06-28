@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { flushPromises } from "@vue/test-utils";
 import { createPinia, setActivePinia } from "pinia";
 import { USER_ROLES, USER_STATUS } from "@/constants/enums";
 import type { User } from "@/types/user";
@@ -161,6 +162,7 @@ describe("useUsersStore", () => {
       store.users = [{ ...mockUser }];
 
       const result = await store.uploadPhoto("u1", file);
+      await flushPromises();
 
       expect(result).toEqual(uploadResponse);
       expect(api.users.uploadPhoto).toHaveBeenCalledWith("u1", expect.any(FormData));
@@ -168,6 +170,25 @@ describe("useUsersStore", () => {
       expect(formData.get("file")).toBe(file);
       expect(api.users.getOne).toHaveBeenCalledWith("u1");
       expect(store.users[0]).toEqual(refreshedUser);
+    });
+
+    it("resolves with upload response even when post-upload refresh fails", async () => {
+      const file = new File(["photo"], "photo.png", { type: "image/png" });
+      const uploadResponse = { photo: "abc123" };
+      vi.mocked(api.users.uploadPhoto).mockResolvedValue(uploadResponse);
+      vi.mocked(api.users.getOne).mockRejectedValue(new Error("network error"));
+      const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      const store = useUsersStore();
+      store.users = [{ ...mockUser }];
+
+      await expect(store.uploadPhoto("u1", file)).resolves.toEqual(uploadResponse);
+      await flushPromises();
+      expect(consoleSpy).toHaveBeenCalledWith(
+        "Error refreshing user u1 after photo upload:",
+        expect.any(Error),
+      );
+
+      consoleSpy.mockRestore();
     });
 
     it("logs and rethrows on API failure", async () => {
