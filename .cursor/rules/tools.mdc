@@ -10,7 +10,7 @@ alwaysApply: true
 ### Unit Tests
 
 - Unit tests for helpers, composables, or components in isolation.
-- Co-locate with file under test: `[NameOfComponent].unit.spec.js`.
+- Co-locate with file under test: `[NameOfComponent].unit.spec.ts`.
 - Use `@vue/test-utils`.
 - Quality over quantity.
 

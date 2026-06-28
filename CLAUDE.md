@@ -47,7 +47,7 @@ There is a shared/ folder adjacent to this repo and it contains an openapi.json 
 ## Testing
 
 ### Unit tests
-- Sit beside the file: `[Name].unit.spec.js`
+- Sit beside the file: `[Name].unit.spec.ts`
 - Use `@vue/test-utils`
 - Quality over quantity
 

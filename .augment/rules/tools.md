@@ -9,7 +9,7 @@ type: "always_apply"
 ### Unit Tests
 
 - Unit tests check helper functions, composables or components in isolation
-- Unit tests should sit beside the file being tested and follow this naming convention `[NameOfComponent].unit.spec.js`
+- Unit tests should sit beside the file being tested and follow this naming convention `[NameOfComponent].unit.spec.ts`
 - Unit tests should make use of @vue/test-utils
 - Quality of unit tests is more important than quantity
 
