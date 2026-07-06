@@ -166,7 +166,9 @@ describe("useUsersStore", () => {
 
       expect(result).toEqual(uploadResponse);
       expect(api.users.uploadPhoto).toHaveBeenCalledWith("u1", expect.any(FormData));
+
       const formData = vi.mocked(api.users.uploadPhoto).mock.calls[0][1] as FormData;
+
       expect(formData.get("file")).toBe(file);
       expect(api.users.getOne).toHaveBeenCalledWith("u1");
       expect(store.users[0]).toEqual(refreshedUser);

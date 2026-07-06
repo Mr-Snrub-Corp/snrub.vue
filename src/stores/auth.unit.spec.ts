@@ -60,10 +60,16 @@ const mockResetEmail = {
   email: "admin@example.com",
 };
 
+const mockResetEmailResponse = {
+  message: "If your email is registered, you will receive a password reset link",
+};
+
 const mockResetPasswordPayload = {
   token: "reset-token",
   new_password: "newPassword123",
 };
+
+const mockResetPasswordResponse = { message: "Password reset successfully" };
 
 describe("useAuthStore", () => {
   beforeEach(() => {
@@ -141,6 +147,27 @@ describe("useAuthStore", () => {
       expect(store.user).toEqual(mockAdminUser);
       expect(store.token).toEqual(mockToken);
       expect(api.auth.login).toHaveBeenCalledWith(mockLoginCredentials);
+    });
+  });
+
+  describe("requestReset", () => {
+    it("API called with { email }", async () => {
+      vi.mocked(api.auth.requestPasswordReset).mockResolvedValue(mockResetEmailResponse);
+      const store = useAuthStore();
+      const result = await store.requestReset(mockResetEmail);
+
+      expect(api.auth.requestPasswordReset).toHaveBeenCalledWith(mockResetEmail);
+    });
+  });
+
+  describe("resetPassword", () => {
+    it("Calls the API with the right payload", async () => {
+      vi.mocked(api.auth.resetPassword).mockResolvedValue(mockResetPasswordResponse);
+
+      const store = useAuthStore();
+      await store.resetPassword(mockResetPasswordPayload);
+
+      expect(api.auth.resetPassword).toHaveBeenCalledWith(mockResetPasswordPayload);
     });
   });
 });

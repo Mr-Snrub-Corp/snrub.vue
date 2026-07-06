@@ -66,7 +66,7 @@ export const useAuthStore = defineStore(
       }
     }
 
-    async function reset({ email }: { email: string }) {
+    async function requestReset({ email }: { email: string }) {
       try {
         const response = await api.auth.requestPasswordReset({ email });
         const data = response as PasswordResetResponse;
@@ -116,7 +116,7 @@ export const useAuthStore = defineStore(
       loginGoogle,
       logout,
       $reset,
-      reset,
+      requestReset,
       resetPassword,
     };
   },

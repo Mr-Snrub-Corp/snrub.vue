@@ -1,7 +1,11 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import api from "@/services/httpService";
-import type { IncidentReport, IncidentReportCreate, IncidentReportUpdate } from "@/types/incidentReport";
+import type {
+  IncidentReport,
+  IncidentReportCreate,
+  IncidentReportUpdate,
+} from "@/types/incidentReport";
 
 export const useIncidentReportsStore = defineStore("incidentReports", () => {
   // State
@@ -26,7 +30,6 @@ export const useIncidentReportsStore = defineStore("incidentReports", () => {
   }
 
   async function fetchIncidentReports(params?: Record<string, string | number | string[]>) {
-    console.log(params);
     try {
       const response = await api.incidentReports.get(params);
       const map: Record<string, IncidentReport> = {};
