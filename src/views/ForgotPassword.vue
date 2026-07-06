@@ -68,10 +68,10 @@
 import Button from "primevue/button";
 import InputText from "primevue/inputtext";
 import { useAuthStore } from "@/stores/auth";
-import { useRouter } from "vue-router";
 import { useToast } from "primevue/usetoast";
 
 import { ref } from "vue";
+import type { PasswordResetResponse } from "@/types/auth";
 
 const authStore = useAuthStore();
 const toast = useToast();
@@ -79,15 +79,11 @@ const toast = useToast();
 const email = ref("");
 
 function handleReset() {
-  console.log("reset");
-
   authStore
     .reset({
       email: email.value,
     })
-    .then((res: any) => {
-      // should use a more specific type for the API response instead of any
-      console.log(res.data);
+    .then((res: PasswordResetResponse) => {
       toast.add({
         severity: "success",
         summary: "Email Sent",

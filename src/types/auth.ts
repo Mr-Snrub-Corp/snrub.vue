@@ -8,3 +8,6 @@ export interface AuthResponse {
   user: User;
 }
 
+export interface PasswordResetResponse {
+  message: string;
+}

@@ -3,7 +3,7 @@ import { computed, ref } from "vue";
 import api from "@/services/httpService";
 import { USER_ROLES } from "@/constants/enums";
 import type { User } from "@/types/user";
-import type { AuthResponse } from "@/types/auth";
+import type { AuthResponse, PasswordResetResponse } from "@/types/auth";
 
 // Re-export User type for convenience
 export type { User };
@@ -69,7 +69,7 @@ export const useAuthStore = defineStore(
     async function reset({ email }: { email: string }) {
       try {
         const response = await api.auth.requestPasswordReset({ email });
-        const data = response as AuthResponse;
+        const data = response as PasswordResetResponse;
 
         return data;
       } catch (error) {
