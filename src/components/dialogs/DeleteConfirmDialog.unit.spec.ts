@@ -19,7 +19,16 @@ const ButtonStub = {
   emits: ["click"],
 };
 
-const mountDialog = (props = {}, slots = {}) => {
+type DeleteConfirmDialogProps = {
+  isVisible?: boolean;
+  header?: string;
+  confirmButtonLabel?: string;
+};
+
+const mountDialog = (
+  props: DeleteConfirmDialogProps = {},
+  slots: Record<string, string> = {},
+) => {
   return shallowMount(DeleteConfirmDialog, {
     props: {
       isVisible: true,
@@ -68,7 +77,7 @@ describe("DeleteConfirmDialog", () => {
     const wrapper = mountDialog();
     const buttons = wrapper.findAllComponents(ButtonStub);
     const cancelButton = buttons.find((btn) => btn.props("label") === "Cancel");
-    expect(cancelButton.props("variant")).toBe("outlined");
+    expect(cancelButton!.props("variant")).toBe("outlined");
   });
 
   it("renders slot content in the dialog body", () => {
@@ -80,7 +89,7 @@ describe("DeleteConfirmDialog", () => {
     const wrapper = mountDialog();
     const buttons = wrapper.findAllComponents(ButtonStub);
     const confirmButton = buttons.find((btn) => btn.props("label") === "Confirm");
-    await confirmButton.trigger("click");
+    await confirmButton!.trigger("click");
     expect(wrapper.emitted("handleDelete")).toHaveLength(1);
   });
 
@@ -88,7 +97,7 @@ describe("DeleteConfirmDialog", () => {
     const wrapper = mountDialog();
     const buttons = wrapper.findAllComponents(ButtonStub);
     const cancelButton = buttons.find((btn) => btn.props("label") === "Cancel");
-    await cancelButton.trigger("click");
+    await cancelButton!.trigger("click");
     expect(wrapper.emitted("handleClose")).toHaveLength(1);
   });
 

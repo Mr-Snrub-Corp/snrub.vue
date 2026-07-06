@@ -50,7 +50,6 @@ export const useUsersStore = defineStore("users", () => {
     } catch (err: any) {
       console.error(`Error fetching user ${uid}:`, err);
       throw err;
-    } finally {
     }
   }
 
@@ -69,13 +68,18 @@ export const useUsersStore = defineStore("users", () => {
   }
 
   async function uploadPhoto(uid: string, file: File) {
-    // TODO try / ctach
-    const formData = new FormData();
-    formData.append("file", file);
-    const response = await api.users.uploadPhoto(uid, formData);
-    // retrieve updated user
-    fetchUserById(uid);
-    return response;
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const response = await api.users.uploadPhoto(uid, formData);
+      fetchUserById(uid).catch((err) =>
+        console.error(`Error refreshing user ${uid} after photo upload:`, err),
+      );
+      return response;
+    } catch (err) {
+      console.error(`Error uploading photo for user ${uid}:`, err);
+      throw err;
+    }
   }
 
   async function deleteUser(uid: string) {

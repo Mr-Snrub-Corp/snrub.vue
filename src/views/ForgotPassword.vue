@@ -24,17 +24,24 @@
         </div>
       </div>
       <div>
-        <label for="email2" class="block text-surface-900 dark:text-surface-0 font-medium mb-2"
-          >Email</label
-        >
-        <InputText
-          id="email2"
-          data-testid="auth.forgot-password-form.email-input"
-          v-model="email"
-          type="text"
-          placeholder="Email address"
-          class="w-full mb-4 p-4"
-        />
+        <div class="flex flex-col gap-2 mb-4">
+          <label for="email2" class="block text-surface-900 dark:text-surface-0 font-medium"
+            >Email</label
+          >
+          <InputText
+            id="email2"
+            data-testid="auth.forgot-password-form.email-input"
+            v-model="formData.email"
+            type="text"
+            placeholder="Email address"
+            class="w-full p-4"
+            :invalid="v$.email.$error"
+            @blur="v$.email.$touch()"
+          />
+          <small v-if="v$.email.$error" class="text-red-500">
+            {{ v$.email.$errors[0]?.$message }}
+          </small>
+        </div>
 
         <div class="flex items-center justify-end mb-12">
           <Button
@@ -56,6 +63,7 @@
           severity="primary"
           icon="pi pi-user"
           class="w-full p-4"
+          :disabled="v$.$invalid"
         />
       </div>
     </div>
@@ -67,33 +75,45 @@
 <script setup lang="ts">
 import Button from "primevue/button";
 import InputText from "primevue/inputtext";
+import { useVuelidate } from "@vuelidate/core";
+import { required, email, maxLength, helpers } from "@vuelidate/validators";
 import { useAuthStore } from "@/stores/auth";
-import { useRouter } from "vue-router";
 import { useToast } from "primevue/usetoast";
-
 import { ref } from "vue";
+import { MAX_LENGTH } from "@/constants/validation";
 
 const authStore = useAuthStore();
 const toast = useToast();
 
-const email = ref("");
+const formData = ref({ email: "" });
 
-function handleReset() {
-  console.log("reset");
+const rules = {
+  email: {
+    required: helpers.withMessage("Email is required", required),
+    email: helpers.withMessage("Please enter a valid email address", email),
+    maxLength: helpers.withMessage(
+      `Email must not exceed ${MAX_LENGTH.EMAIL} characters`,
+      maxLength(MAX_LENGTH.EMAIL),
+    ),
+  },
+};
 
-  authStore
-    .reset({
-      email: email.value,
-    })
-    .then((res: any) => {
-      // should use a more specific type for the API response instead of any
-      console.log(res.data);
-      toast.add({
-        severity: "success",
-        summary: "Email Sent",
-        detail: "If your email is registered, you will receive a password reset link",
-        life: 5000,
-      });
+const v$ = useVuelidate(rules, formData);
+
+async function handleReset() {
+  const isValid = await v$.value.$validate();
+  if (!isValid) return;
+
+  try {
+    await authStore.requestReset({ email: formData.value.email });
+    toast.add({
+      severity: "success",
+      summary: "Email Sent",
+      detail: "If your email is registered, you will receive a password reset link",
+      life: 5000,
     });
+  } catch (error) {
+    console.error("Reset failed:", error);
+  }
 }
 </script>

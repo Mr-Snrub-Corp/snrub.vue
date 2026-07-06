@@ -3,7 +3,7 @@ import { shallowMount } from "@vue/test-utils";
 import DashboardNavbar from "./DashboardNavbar.vue";
 
 const mockRoute = { path: "/dashboard" };
-let mockUserPhoto = "abc123";
+let mockUserPhoto: string | undefined = "abc123";
 
 vi.mock("vue-router", () => ({
   useRoute: () => mockRoute,
@@ -15,7 +15,8 @@ vi.mock("@/stores/auth", () => ({
 
 vi.mock("@/stores/users", () => ({
   useUsersStore: () => ({
-    getUserById: (uid) => (uid === "u1" ? { photo: mockUserPhoto } : undefined),
+    getUserById: (uid: string) =>
+      uid === "u1" ? { photo: mockUserPhoto } : undefined,
   }),
 }));
 
@@ -34,7 +35,7 @@ const RouterLinkStub = {
   props: ["to", "custom"],
 };
 
-const mountNavbar = (overrides = {}) => {
+const mountNavbar = () => {
   return shallowMount(DashboardNavbar, {
     global: {
       stubs: {
@@ -43,7 +44,6 @@ const mountNavbar = (overrides = {}) => {
         "router-link": RouterLinkStub,
       },
     },
-    ...overrides,
   });
 };
 
