@@ -1,16 +1,16 @@
 <template>
   <div class="h-screen flex w-full bg-surface-0 dark:bg-surface-950">
-    <div class="bg-surface-0 dark:bg-surface-950 w-full md:w-6/12 p-12 md:p-20">
+    <main id="main-content" class="bg-surface-0 dark:bg-surface-950 w-full md:w-6/12 p-12 md:p-20">
       <div class="mb-8">
-        <RouterLink to="/" class="inline-block mb-4">
+        <RouterLink to="/" class="inline-block mb-4" aria-label="Snrub Corp home">
           <DashboardLogo :size="56" />
         </RouterLink>
-        <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">
+        <h1 class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">
           Welcome Back
-        </div>
+        </h1>
       </div>
       <div>
-        <form>
+        <form @submit.prevent="handleLogin">
           <div class="flex flex-col gap-2 mb-4">
             <label for="email2" class="block text-surface-900 dark:text-surface-0 font-medium"
               >Email</label
@@ -23,9 +23,11 @@
               class="w-full p-4"
               data-testid="auth.login-form.email-input"
               :invalid="v$.email.$error"
+              :aria-invalid="v$.email.$error ? 'true' : undefined"
+              :aria-describedby="v$.email.$error ? 'email2-error' : undefined"
               @blur="v$.email.$touch()"
             />
-            <small v-if="v$.email.$error" class="text-red-500">
+            <small v-if="v$.email.$error" id="email2-error" class="text-red-500">
               {{ v$.email.$errors[0]?.$message }}
             </small>
           </div>
@@ -43,14 +45,16 @@
               autocomplete="off"
               data-testid="auth.login-form.password-input"
               :invalid="v$.password.$error"
+              :aria-invalid="v$.password.$error ? 'true' : undefined"
+              :aria-describedby="v$.password.$error ? 'password2-error' : undefined"
               @blur="v$.password.$touch()"
             />
-            <small v-if="v$.password.$error" class="text-red-500">
+            <small v-if="v$.password.$error" id="password2-error" class="text-red-500">
               {{ v$.password.$errors[0]?.$message }}
             </small>
           </div>
 
-          <div class="flex items-center justify-between mb-12">
+          <div class="flex items-center justify-between mb-4">
             <div class="flex items-center"></div>
             <Button
               class="font-medium no-underline ml-2 text-primary text-right"
@@ -63,31 +67,33 @@
             >
             </Button>
           </div>
-        </form>
 
-        <Button
-          @click="handleLogin"
-          label="Sign in"
-          severity="primary"
-          icon="pi pi-user"
-          class="w-full p-4"
-          data-testid="auth.login-form.sign-in-btn"
-          :disabled="v$.$invalid"
-        />
-        <div class="flex justify-between gap-2 mt-4">
           <Button
-            @click="handleGoogleLogin"
-            label="Sign in with Google"
-            icon="pi pi-google"
-            class="p-button-google w-100 grow p-4 mt-2"
+            type="submit"
+            label="Sign in"
+            severity="primary"
+            icon="pi pi-user"
+            class="w-full p-4 mb-4"
+            data-testid="auth.login-form.sign-in-btn"
+            :disabled="v$.$invalid"
           />
-        </div>
+          <div class="flex justify-between gap-2">
+            <Button
+              type="button"
+              @click="handleGoogleLogin"
+              label="Sign in with Google"
+              icon="pi pi-google"
+              class="p-button-google w-100 grow p-4 mt-2"
+            />
+          </div>
+        </form>
       </div>
       <Message v-if="errorMessage" class="mt-4" severity="error" size="small" data-testid="auth.login-form.error-message">{{
         errorMessage
       }}</Message>
-    </div>
+    </main>
     <div
+      aria-hidden="true"
       class="hidden md:block w-6/12 bg-no-repeat bg-cover bg-[url('https://fqjltiegiezfetthbags.supabase.co/storage/v1/render/image/public/block.images/blocks/signin/signin.jpg')]"
     />
   </div>

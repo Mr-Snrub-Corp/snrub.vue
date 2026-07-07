@@ -22,6 +22,7 @@
             class="w-full flex flex-row items-center cursor-pointer p-2 rounded-lg text-surface-400 border border-transparent hover:bg-surface-800 hover:border-surface-700 hover:text-surface-0 transition-colors duration-150 group"
           >
             <i
+              aria-hidden="true"
               :class="item.icon"
               class="text-xl! leading-tight! text-surface-400 group-hover:text-surface-0"
             />
@@ -30,13 +31,14 @@
         </div>
         <div class="mt-auto flex flex-col pt-4 pb-6 px-4 gap-4">
           <hr class="w-full border-t border-surface-800" />
-          <a
+          <button
+            type="button"
             @click="$emit('logout')"
-            class="cursor-pointer inline-flex items-center gap-2 text-surface-400 hover:text-surface-0 transition-colors duration-150"
+            class="cursor-pointer inline-flex items-center gap-2 text-surface-400 hover:text-surface-0 transition-colors duration-150 bg-transparent border-0 p-0"
           >
-            <i class="pi pi-sign-out text-xl" />
+            <i aria-hidden="true" class="pi pi-sign-out text-xl" />
             <span class="font-medium text-base">Logout</span>
-          </a>
+          </button>
         </div>
       </div>
     </template>

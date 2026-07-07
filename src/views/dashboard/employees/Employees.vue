@@ -23,6 +23,7 @@
           <Avatar
             v-if="slotProps.data.photo"
             :image="`data:image/png;base64,${slotProps.data.photo}`"
+            :aria-label="`${slotProps.data.name} profile picture`"
             class="mr-2 border border-surface-300"
             shape="circle"
           />
@@ -38,6 +39,7 @@
             <Button
               v-if="authStore.isSuperAdmin"
               icon="pi pi-trash"
+              :aria-label="`Delete ${slotProps.data.name}`"
               data-testid="employees.list.delete-btn"
               @click="handleShowDeleteDialog(slotProps.data.uid)"
               severity="secondary"
@@ -46,6 +48,7 @@
             />
             <Button
               icon="pi pi-eye"
+              :aria-label="`View ${slotProps.data.name}`"
               data-testid="employees.list.view-btn"
               @click="router.push({ name: 'employeeDetail', params: { uid: slotProps.data.uid } })"
               severity="secondary"
@@ -57,6 +60,7 @@
           <Button
             class="xl:hidden"
             icon="pi pi-ellipsis-v"
+            :aria-label="`Actions for ${slotProps.data.name}`"
             @click="toggleActionMenu($event, slotProps.data)"
             severity="secondary"
             variant="text"

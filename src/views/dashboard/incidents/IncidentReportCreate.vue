@@ -25,9 +25,11 @@
               placeholder="Select incident type"
               class="w-full"
               :invalid="v$.incident_type_id.$error"
+              :aria-invalid="v$.incident_type_id.$error ? 'true' : undefined"
+              :aria-describedby="v$.incident_type_id.$error ? 'incidentType-error' : undefined"
               @blur="v$.incident_type_id.$touch()"
             />
-            <small v-if="v$.incident_type_id.$error" class="text-red-500">
+            <small v-if="v$.incident_type_id.$error" id="incidentType-error" class="text-red-500">
               {{ v$.incident_type_id.$errors[0]?.$message }}
             </small>
           </div>
@@ -43,9 +45,11 @@
               showTime
               class="w-full"
               :invalid="v$.occurred_at.$error"
+              :aria-invalid="v$.occurred_at.$error ? 'true' : undefined"
+              :aria-describedby="v$.occurred_at.$error ? 'occurredAt-error' : undefined"
               @blur="v$.occurred_at.$touch()"
             />
-            <small v-if="v$.occurred_at.$error" class="text-red-500">
+            <small v-if="v$.occurred_at.$error" id="occurredAt-error" class="text-red-500">
               {{ v$.occurred_at.$errors[0]?.$message }}
             </small>
           </div>
@@ -62,9 +66,11 @@
               auto-resize
               class="w-full"
               :invalid="v$.description.$error"
+              :aria-invalid="v$.description.$error ? 'true' : undefined"
+              :aria-describedby="v$.description.$error ? 'description-error' : undefined"
               @blur="v$.description.$touch()"
             />
-            <small v-if="v$.description.$error" class="text-red-500">
+            <small v-if="v$.description.$error" id="description-error" class="text-red-500">
               {{ v$.description.$errors[0]?.$message }}
             </small>
           </div>
@@ -80,9 +86,11 @@
               show-buttons
               class="w-full"
               :invalid="v$.severity.$error"
+              :aria-invalid="v$.severity.$error ? 'true' : undefined"
+              :aria-describedby="v$.severity.$error ? 'severity-error' : undefined"
               @blur="v$.severity.$touch()"
             />
-            <small v-if="v$.severity.$error" class="text-red-500">
+            <small v-if="v$.severity.$error" id="severity-error" class="text-red-500">
               {{ v$.severity.$errors[0]?.$message }}
             </small>
           </div>
@@ -114,6 +122,7 @@
               <Tag :value="formatLabel(subject.role)" severity="info" />
               <Button
                 icon="pi pi-times"
+                :aria-label="`Remove ${getSubjectName(subject.user_id)}`"
                 severity="danger"
                 variant="text"
                 rounded
@@ -129,8 +138,9 @@
           <!-- Add Subject -->
           <div v-if="showAddSubject" class="flex items-end gap-3">
             <div class="flex flex-col gap-2 flex-1">
-              <label class="text-sm text-surface-900 dark:text-surface-0">User</label>
+              <label for="subject-user" class="text-sm text-surface-900 dark:text-surface-0">User</label>
               <Select
+                id="subject-user"
                 v-model="newSubject.user_id"
                 :options="availableUsers"
                 option-label="name"
@@ -141,8 +151,9 @@
               />
             </div>
             <div class="flex flex-col gap-2 flex-1">
-              <label class="text-sm text-surface-900 dark:text-surface-0">Role</label>
+              <label for="subject-role" class="text-sm text-surface-900 dark:text-surface-0">Role</label>
               <Select
+                id="subject-role"
                 v-model="newSubject.role"
                 :options="subjectRoleOptions"
                 option-label="label"

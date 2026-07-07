@@ -1,5 +1,8 @@
 <template>
-  <div></div>
+  <main id="main-content">
+    <h1 class="sr-only">Signing In</h1>
+    <p role="status" class="sr-only">Completing sign in, please wait…</p>
+  </main>
 </template>
 
 <script setup lang="ts">

@@ -1,8 +1,9 @@
 <template>
   <div class="h-screen flex w-full bg-surface-0 dark:bg-surface-950">
-    <div class="bg-surface-0 dark:bg-surface-950 w-full md:w-6/12 p-12 md:p-20">
+    <main id="main-content" class="bg-surface-0 dark:bg-surface-950 w-full md:w-6/12 p-12 md:p-20">
       <div class="mb-8">
         <svg
+          aria-hidden="true"
           class="mb-4 fill-surface-600 dark:fill-surface-200 h-14"
           viewBox="0 0 30 32"
           fill="none"
@@ -14,16 +15,16 @@
             d="M20.7207 6.18211L14.9944 3.11148L3.46855 9.28678L0.579749 7.73444L14.9944 0L23.6242 4.62977L20.7207 6.18211ZM14.9996 12.3574L26.5182 6.1821L29.4216 7.73443L14.9996 15.4621L6.37724 10.8391L9.27337 9.28677L14.9996 12.3574ZM2.89613 16.572L0 15.0196V24.2656L14.4147 32V28.8953L2.89613 22.7132V16.572ZM11.5185 18.09L0 11.9147V8.81001L14.4147 16.5376V25.7904L11.5185 24.2312V18.09ZM24.2086 15.0194V11.9147L15.5788 16.5377V31.9998L18.475 30.4474V18.09L24.2086 15.0194ZM27.0969 22.7129V10.3623L30.0004 8.81V24.2653L21.3706 28.895V25.7904L27.0969 22.7129Z"
           />
         </svg>
-        <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">
+        <h1 class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">
           Forgot Password
-        </div>
+        </h1>
         <div class="flex items-center">
           <span class="text-surface-600 dark:text-surface-200 font-medium mr-1"
             >No worries, we'll send you restore instructions</span
           >
         </div>
       </div>
-      <div>
+      <form @submit.prevent="handleReset">
         <div class="flex flex-col gap-2 mb-4">
           <label for="email2" class="block text-surface-900 dark:text-surface-0 font-medium"
             >Email</label
@@ -36,14 +37,16 @@
             placeholder="Email address"
             class="w-full p-4"
             :invalid="v$.email.$error"
+            :aria-invalid="v$.email.$error ? 'true' : undefined"
+            :aria-describedby="v$.email.$error ? 'email2-error' : undefined"
             @blur="v$.email.$touch()"
           />
-          <small v-if="v$.email.$error" class="text-red-500">
+          <small v-if="v$.email.$error" id="email2-error" class="text-red-500">
             {{ v$.email.$errors[0]?.$message }}
           </small>
         </div>
 
-        <div class="flex items-center justify-end mb-12">
+        <div class="flex items-center justify-end mb-4">
           <Button
             class="font-medium no-underline ml-2 text-primary text-right"
             data-testid="auth.forgot-password-form.back-to-login-btn"
@@ -57,7 +60,7 @@
         </div>
 
         <Button
-          @click="handleReset"
+          type="submit"
           label="Reset Password"
           data-testid="auth.forgot-password-form.submit-btn"
           severity="primary"
@@ -65,9 +68,10 @@
           class="w-full p-4"
           :disabled="v$.$invalid"
         />
-      </div>
-    </div>
+      </form>
+    </main>
     <div
+      aria-hidden="true"
       class="hidden md:block w-6/12 bg-no-repeat bg-cover bg-[url('https://fqjltiegiezfetthbags.supabase.co/storage/v1/render/image/public/block.images/blocks/signin/signin.jpg')]"
     />
   </div>

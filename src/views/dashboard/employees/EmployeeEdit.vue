@@ -29,9 +29,11 @@
                   class="w-full"
                   data-testid="employees.edit-form.email-input"
                   :invalid="v$.email.$error"
+                  :aria-invalid="v$.email.$error ? 'true' : undefined"
+                  :aria-describedby="v$.email.$error ? 'edit-email-error' : undefined"
                   @blur="v$.email.$touch()"
                 />
-                <small v-if="v$.email.$error" class="text-red-500">
+                <small v-if="v$.email.$error" id="edit-email-error" class="text-red-500">
                   {{ v$.email.$errors[0]?.$message }}
                 </small>
               </div>
@@ -45,9 +47,11 @@
                   class="w-full"
                   data-testid="employees.edit-form.name-input"
                   :invalid="v$.name.$error"
+                  :aria-invalid="v$.name.$error ? 'true' : undefined"
+                  :aria-describedby="v$.name.$error ? 'edit-name-error' : undefined"
                   @blur="v$.name.$touch()"
                 />
-                <small v-if="v$.name.$error" class="text-red-500">
+                <small v-if="v$.name.$error" id="edit-name-error" class="text-red-500">
                   {{ v$.name.$errors[0]?.$message }}
                 </small>
               </div>
@@ -65,9 +69,11 @@
                   class="w-full"
                   data-testid="employees.edit-form.role-select"
                   :invalid="v$.role.$error"
+                  :aria-invalid="v$.role.$error ? 'true' : undefined"
+                  :aria-describedby="v$.role.$error ? 'edit-role-error' : undefined"
                   @blur="v$.role.$touch()"
                 />
-                <small v-if="v$.role.$error" class="text-red-500">
+                <small v-if="v$.role.$error" id="edit-role-error" class="text-red-500">
                   {{ v$.role.$errors[0]?.$message }}
                 </small>
               </div>
@@ -87,9 +93,11 @@
                   class="w-full"
                   data-testid="employees.edit-form.status-select"
                   :invalid="v$.status.$error"
+                  :aria-invalid="v$.status.$error ? 'true' : undefined"
+                  :aria-describedby="v$.status.$error ? 'edit-status-error' : undefined"
                   @blur="v$.status.$touch()"
                 />
-                <small v-if="v$.status.$error" class="text-red-500">
+                <small v-if="v$.status.$error" id="edit-status-error" class="text-red-500">
                   {{ v$.status.$errors[0]?.$message }}
                 </small>
               </div>
@@ -107,7 +115,7 @@
                 <img
                   v-else
                   :src="getUserAvatar"
-                  alt="Employee avatar"
+                  :alt="formData.name ? `${formData.name} profile picture` : 'Employee profile picture'"
                   class="h-32 w-32 rounded-lg object-cover border border-surface-300"
                 />
                 <FileUpload

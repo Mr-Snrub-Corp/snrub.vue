@@ -28,17 +28,19 @@
         <div class="flex justify-between items-start gap-3">
           <div>
             <div
-              class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-widest"
+              class="text-xs font-semibold text-surface-600 dark:text-surface-400 uppercase tracking-widest"
             >
               Reactor Power
             </div>
             <div
               data-testid="reactor-monitoring.reactor-power.kpi-value"
               class="text-3xl font-bold mt-1"
+              aria-live="polite"
+              aria-atomic="true"
               :style="{ color: statusColor(reactorPowerStatus) }"
             >
               {{ reactorData.reactor_power?.toFixed(1) }}
-              <span class="text-base font-normal text-surface-400">%</span>
+              <span class="text-base font-normal text-surface-600 dark:text-surface-400">%</span>
             </div>
           </div>
           <div class="flex grow justify-between items-center gap-2">
@@ -46,7 +48,7 @@
               class="h-7 w-7 rounded-md flex items-center justify-center"
               :style="{ background: statusBg(reactorPowerStatus) }"
             >
-              <i class="pi pi-bolt text-xs" :style="{ color: statusColor(reactorPowerStatus) }" />
+              <i aria-hidden="true" class="pi pi-bolt text-xs" :style="{ color: statusColor(reactorPowerStatus) }" />
             </div>
             <Tag
               :severity="getReactorStatusSeverity(reactorPowerStatus)"
@@ -61,6 +63,8 @@
             :data="reactorPowerData"
             :options="reactorPowerOptions"
             class="h-full"
+            role="img"
+            aria-label="Reactor power trend line chart"
           />
         </div>
       </div>
@@ -70,17 +74,19 @@
         <div class="flex justify-between items-start gap-3">
           <div>
             <div
-              class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-widest"
+              class="text-xs font-semibold text-surface-600 dark:text-surface-400 uppercase tracking-widest"
             >
               Core Temperature
             </div>
             <div
               data-testid="reactor-monitoring.core-temperature.kpi-value"
               class="text-3xl font-bold mt-1"
+              aria-live="polite"
+              aria-atomic="true"
               :style="{ color: statusColor(coreTemperatureStatus) }"
             >
               {{ reactorData.core_temperature?.toFixed(1) }}
-              <span class="text-base font-normal text-surface-400">°C</span>
+              <span class="text-base font-normal text-surface-600 dark:text-surface-400">°C</span>
             </div>
           </div>
           <div class="flex grow justify-between items-center gap-2">
@@ -88,7 +94,7 @@
               class="h-7 w-7 rounded-md flex items-center justify-center"
               :style="{ background: statusBg(coreTemperatureStatus) }"
             >
-              <i class="pi pi-sun text-xs" :style="{ color: statusColor(coreTemperatureStatus) }" />
+              <i aria-hidden="true" class="pi pi-sun text-xs" :style="{ color: statusColor(coreTemperatureStatus) }" />
             </div>
             <Tag
               :severity="getReactorStatusSeverity(coreTemperatureStatus)"
@@ -103,6 +109,8 @@
             :data="coreTemperatureData"
             :options="coreTemperatureOptions"
             class="h-full"
+            role="img"
+            aria-label="Core temperature trend line chart"
           />
         </div>
       </div>
@@ -112,17 +120,19 @@
         <div class="flex justify-between items-start gap-3">
           <div>
             <div
-              class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-widest"
+              class="text-xs font-semibold text-surface-600 dark:text-surface-400 uppercase tracking-widest"
             >
               Coolant Flow Rate
             </div>
             <div
               data-testid="reactor-monitoring.coolant-flow-rate.kpi-value"
               class="text-3xl font-bold mt-1"
+              aria-live="polite"
+              aria-atomic="true"
               :style="{ color: statusColor(coolantFlowStatus) }"
             >
               {{ reactorData.coolant_flow_rate?.toFixed(1) }}
-              <span class="text-base font-normal text-surface-400">%</span>
+              <span class="text-base font-normal text-surface-600 dark:text-surface-400">%</span>
             </div>
           </div>
           <div class="flex grow justify-between items-center gap-2">
@@ -130,7 +140,7 @@
               class="h-7 w-7 rounded-md flex items-center justify-center"
               :style="{ background: statusBg(coolantFlowStatus) }"
             >
-              <i class="pi pi-refresh text-xs" :style="{ color: statusColor(coolantFlowStatus) }" />
+              <i aria-hidden="true" class="pi pi-refresh text-xs" :style="{ color: statusColor(coolantFlowStatus) }" />
             </div>
             <Tag
               :severity="getReactorStatusSeverity(coolantFlowStatus)"
@@ -140,7 +150,14 @@
           </div>
         </div>
         <div data-testid="reactor-monitoring.coolant-flow-rate.chart" class="h-40">
-          <Chart type="line" :data="coolantFlowData" :options="coolantFlowOptions" class="h-full" />
+          <Chart
+            type="line"
+            :data="coolantFlowData"
+            :options="coolantFlowOptions"
+            class="h-full"
+            role="img"
+            aria-label="Coolant flow rate trend line chart"
+          />
         </div>
       </div>
 
@@ -149,17 +166,19 @@
         <div class="flex justify-between items-start gap-3">
           <div>
             <div
-              class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-widest"
+              class="text-xs font-semibold text-surface-600 dark:text-surface-400 uppercase tracking-widest"
             >
               Coolant Pressure
             </div>
             <div
               data-testid="reactor-monitoring.coolant-pressure.kpi-value"
               class="text-3xl font-bold mt-1"
+              aria-live="polite"
+              aria-atomic="true"
               :style="{ color: statusColor(coolantPressureStatus) }"
             >
               {{ reactorData.coolant_pressure?.toFixed(1) }}
-              <span class="text-base font-normal text-surface-400">bar</span>
+              <span class="text-base font-normal text-surface-600 dark:text-surface-400">bar</span>
             </div>
           </div>
           <div class="flex grow justify-between items-center gap-2">
@@ -168,6 +187,7 @@
               :style="{ background: statusBg(coolantPressureStatus) }"
             >
               <i
+                aria-hidden="true"
                 class="pi pi-sliders-h text-xs"
                 :style="{ color: statusColor(coolantPressureStatus) }"
               />
@@ -185,6 +205,8 @@
             :data="coolantPressureData"
             :options="coolantPressureOptions"
             class="h-full"
+            role="img"
+            aria-label="Coolant pressure trend line chart"
           />
         </div>
       </div>
@@ -194,27 +216,30 @@
         <div class="flex justify-between items-start gap-3">
           <div>
             <div
-              class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-widest"
+              class="text-xs font-semibold text-surface-600 dark:text-surface-400 uppercase tracking-widest"
             >
               Radiation Level
             </div>
             <div
               data-testid="reactor-monitoring.radiation-level.kpi-value"
               class="text-3xl font-bold mt-1"
-              :class="{ 'animate-pulse': radiationStatus === 'danger' }"
+              :class="{ 'motion-safe:animate-pulse': radiationStatus === 'danger' }"
+              aria-live="polite"
+              aria-atomic="true"
               :style="{ color: statusColor(radiationStatus) }"
             >
               {{ reactorData.radiation_level?.toFixed(2) }}
-              <span class="text-base font-normal text-surface-400">mSv/h</span>
+              <span class="text-base font-normal text-surface-600 dark:text-surface-400">mSv/h</span>
             </div>
           </div>
           <div class="flex grow justify-between items-center gap-2">
             <div
               class="h-7 w-7 rounded-md flex items-center justify-center"
-              :class="{ 'animate-pulse': radiationStatus === 'danger' }"
+              :class="{ 'motion-safe:animate-pulse': radiationStatus === 'danger' }"
               :style="{ background: statusBg(radiationStatus) }"
             >
               <i
+                aria-hidden="true"
                 class="pi pi-exclamation-triangle text-xs"
                 :style="{ color: statusColor(radiationStatus) }"
               />
@@ -227,7 +252,14 @@
           </div>
         </div>
         <div data-testid="reactor-monitoring.radiation-level.chart" class="h-40">
-          <Chart type="line" :data="radiationData" :options="radiationOptions" class="h-full" />
+          <Chart
+            type="line"
+            :data="radiationData"
+            :options="radiationOptions"
+            class="h-full"
+            role="img"
+            aria-label="Radiation level trend line chart"
+          />
         </div>
       </div>
 
@@ -236,17 +268,19 @@
         <div class="flex justify-between items-start gap-3">
           <div>
             <div
-              class="text-xs font-semibold text-surface-400 dark:text-surface-500 uppercase tracking-widest"
+              class="text-xs font-semibold text-surface-600 dark:text-surface-400 uppercase tracking-widest"
             >
               Containment Integrity
             </div>
             <div
               data-testid="reactor-monitoring.containment-integrity.kpi-value"
               class="text-3xl font-bold mt-1"
+              aria-live="polite"
+              aria-atomic="true"
               :style="{ color: statusColor(containmentStatus) }"
             >
               {{ reactorData.containment_integrity?.toFixed(1)
-              }}<span class="text-base font-normal text-surface-400">%</span>
+              }}<span class="text-base font-normal text-surface-600 dark:text-surface-400">%</span>
             </div>
           </div>
           <div class="flex grow justify-between items-center gap-2">
@@ -254,7 +288,7 @@
               class="h-7 w-7 rounded-md flex items-center justify-center"
               :style="{ background: statusBg(containmentStatus) }"
             >
-              <i class="pi pi-shield text-xs" :style="{ color: statusColor(containmentStatus) }" />
+              <i aria-hidden="true" class="pi pi-shield text-xs" :style="{ color: statusColor(containmentStatus) }" />
             </div>
             <Tag
               :severity="getReactorStatusSeverity(containmentStatus)"
@@ -272,6 +306,8 @@
             :data="containmentData"
             :options="doughnutOptions"
             class="absolute inset-0"
+            role="img"
+            :aria-label="`Containment integrity doughnut chart: ${reactorData.containment_integrity?.toFixed(0)}%`"
           />
           <span
             class="relative z-10 text-xl font-bold pointer-events-none"

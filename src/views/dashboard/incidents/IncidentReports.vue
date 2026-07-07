@@ -51,7 +51,7 @@
         <div class="flex justify-end">
           <IconField>
             <InputIcon class="pi pi-search" />
-            <InputText v-model="filters['global'].value" placeholder="Keyword Search" />
+            <InputText v-model="filters['global'].value" placeholder="Keyword Search" aria-label="Search incident reports" />
           </IconField>
         </div>
       </template>
@@ -66,6 +66,7 @@
             v-model="filterModel.value"
             type="text"
             placeholder="Search"
+            aria-label="Filter by incident type"
             class="w-full"
             @input="filterCallback()"
           />
@@ -180,6 +181,7 @@
         <template #body="{ data }">
           <Button
             icon="pi pi-eye"
+            aria-label="View incident report"
             severity="secondary"
             variant="text"
             rounded

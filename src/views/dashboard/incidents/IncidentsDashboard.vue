@@ -57,6 +57,7 @@
           class="flex items-center rounded-xl border overflow-hidden border-zinc-200 dark:border-zinc-700"
         >
           <div
+            aria-hidden="true"
             class="sm:block hidden w-3.5 self-stretch"
             :class="getSeverityClass(item.severity)"
           />
@@ -84,6 +85,7 @@
               />
               <Button
                 icon="pi pi-eye"
+                aria-label="View incident report"
                 severity="secondary"
                 variant="text"
                 rounded
