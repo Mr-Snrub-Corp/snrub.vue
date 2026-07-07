@@ -1,5 +1,7 @@
 <template>
-  <div class="px-6 py-4 md:px-12 md:py-6 lg:px-20 lg:py-8 bg-surface-50 dark:bg-surface-950 h-screen overflow-y-auto">
+  <div
+    class="px-6 py-4 md:px-12 md:py-6 lg:px-20 lg:py-8 bg-surface-50 dark:bg-surface-950 h-screen overflow-y-auto"
+  >
     <div class="mb-6">
       <h1 class="text-3xl font-bold text-surface-900 dark:text-surface-0">
         Create Incident Report
@@ -10,9 +12,9 @@
       <div class="flex flex-col gap-7">
         <div class="text-xl font-medium text-surface-900 dark:text-surface-0">Details</div>
 
-        <div class="flex flex-col gap-6 ">
+        <div class="flex flex-col gap-6">
           <!-- Incident Type -->
-          <div class="flex flex-col gap-2 md:w-3/4"">
+          <div class="flex flex-col gap-2 md:w-3/4">
             <label for="incidentType" class="text-surface-900 dark:text-surface-0"
               >Incident Type *</label
             >
@@ -138,7 +140,9 @@
           <!-- Add Subject -->
           <div v-if="showAddSubject" class="flex items-end gap-3">
             <div class="flex flex-col gap-2 flex-1">
-              <label for="subject-user" class="text-sm text-surface-900 dark:text-surface-0">User</label>
+              <label for="subject-user" class="text-sm text-surface-900 dark:text-surface-0"
+                >User</label
+              >
               <Select
                 id="subject-user"
                 v-model="newSubject.user_id"
@@ -151,7 +155,9 @@
               />
             </div>
             <div class="flex flex-col gap-2 flex-1">
-              <label for="subject-role" class="text-sm text-surface-900 dark:text-surface-0">Role</label>
+              <label for="subject-role" class="text-sm text-surface-900 dark:text-surface-0"
+                >Role</label
+              >
               <Select
                 id="subject-role"
                 v-model="newSubject.role"

@@ -54,7 +54,9 @@
             aria-describedby="input-error-msg"
             fluid
           />
-          <small id="input-error-msg" class="text-red-400 dark:text-red-300">This field is required</small>
+          <small id="input-error-msg" class="text-red-400 dark:text-red-300"
+            >This field is required</small
+          >
         </div>
       </div>
     </div>

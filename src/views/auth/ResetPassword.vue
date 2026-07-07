@@ -1,5 +1,8 @@
 <template>
-  <main id="main-content" class="h-screen w-full bg-surface-50 dark:bg-surface-950 px-6 py-20 md:px-12 lg:px-20">
+  <main
+    id="main-content"
+    class="h-screen w-full bg-surface-50 dark:bg-surface-950 px-6 py-20 md:px-12 lg:px-20"
+  >
     <div
       class="bg-surface-0 dark:bg-surface-900 p-8 md:p-12 shadow-sm rounded-2xl w-full max-w-xl mx-auto flex flex-col gap-8"
     >
@@ -56,9 +59,14 @@
               :aria-invalid="v$.password.$invalid ? 'true' : undefined"
               :aria-describedby="v$.password.$invalid ? 'password-error' : undefined"
             />
-            <Message v-if="v$.password.$invalid" id="password-error" severity="error" size="small" variant="simple">{{
-              v$.password.$errors[0]?.$message
-            }}</Message>
+            <Message
+              v-if="v$.password.$invalid"
+              id="password-error"
+              severity="error"
+              size="small"
+              variant="simple"
+              >{{ v$.password.$errors[0]?.$message }}</Message
+            >
           </div>
           <div class="flex flex-col gap-2 w-full">
             <div class="flex justify-between w-full">

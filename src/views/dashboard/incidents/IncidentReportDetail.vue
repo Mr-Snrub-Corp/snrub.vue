@@ -1,5 +1,7 @@
 <template>
-  <div class="px-6 py-4 md:px-12 md:py-6 lg:px-20 lg:py-8 bg-surface-50 dark:bg-surface-950 h-screen overflow-y-auto">
+  <div
+    class="px-6 py-4 md:px-12 md:py-6 lg:px-20 lg:py-8 bg-surface-50 dark:bg-surface-950 h-screen overflow-y-auto"
+  >
     <div v-if="isLoading" class="flex justify-center py-20">
       <ProgressSpinner />
     </div>
@@ -39,7 +41,10 @@
           </div>
           <div>
             <div class="text-sm text-zinc-500 dark:text-zinc-400 mb-1">Escalation Level</div>
-            <Tag :value="formatLabel(report.escalation_level)" :severity="getEscalationSeverity(report.escalation_level)" />
+            <Tag
+              :value="formatLabel(report.escalation_level)"
+              :severity="getEscalationSeverity(report.escalation_level)"
+            />
           </div>
         </div>
         <div v-if="report.description">

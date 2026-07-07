@@ -22,7 +22,12 @@ const router = createRouter({
       name: "auth",
       component: () => import("@/views/auth/AuthIndex.vue"),
       children: [
-        { path: "login", name: "Login", component: () => import("@/views/Login.vue"), meta: { title: "Sign In | Snrub Corp" } },
+        {
+          path: "login",
+          name: "Login",
+          component: () => import("@/views/Login.vue"),
+          meta: { title: "Sign In | Snrub Corp" },
+        },
         {
           path: "forgot-password",
           name: "forgotPassword",

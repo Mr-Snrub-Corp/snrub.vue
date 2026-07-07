@@ -1,7 +1,9 @@
 <template>
   <div class="flex flex-col h-full">
     <!-- Horizontal Navigation Menu -->
-    <div class="border-b border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900">
+    <div
+      class="border-b border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900"
+    >
       <nav class="flex gap-1 px-6 py-2 overflow-x-auto">
         <RouterLink
           :to="{ name: 'designForm' }"
@@ -100,4 +102,3 @@
 <script setup lang="ts">
 import { RouterLink } from "vue-router";
 </script>
-

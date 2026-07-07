@@ -8,7 +8,12 @@ interface NavItem {
 }
 
 export const navItems: NavItem[] = [
-  { label: "Home", icon: "pi pi-home", testId: "nav.sidebar.home-link", to: { name: "dashboardHome" } },
+  {
+    label: "Home",
+    icon: "pi pi-home",
+    testId: "nav.sidebar.home-link",
+    to: { name: "dashboardHome" },
+  },
   {
     label: "Employees",
     icon: "pi pi-users",

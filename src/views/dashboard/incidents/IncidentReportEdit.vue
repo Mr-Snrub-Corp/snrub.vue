@@ -1,5 +1,7 @@
 <template>
-  <div class="px-6 py-4 md:px-12 md:py-6 lg:px-20 lg:py-8 bg-surface-50 dark:bg-surface-950 h-screen overflow-y-auto">
+  <div
+    class="px-6 py-4 md:px-12 md:py-6 lg:px-20 lg:py-8 bg-surface-50 dark:bg-surface-950 h-screen overflow-y-auto"
+  >
     <div v-if="isLoading" class="flex justify-center py-20">
       <ProgressSpinner />
     </div>
@@ -94,7 +96,11 @@
                 :aria-describedby="v$.escalation_level.$error ? 'edit-escalation-error' : undefined"
                 @blur="v$.escalation_level.$touch()"
               />
-              <small v-if="v$.escalation_level.$error" id="edit-escalation-error" class="text-red-500">
+              <small
+                v-if="v$.escalation_level.$error"
+                id="edit-escalation-error"
+                class="text-red-500"
+              >
                 {{ v$.escalation_level.$errors[0]?.$message }}
               </small>
             </div>
@@ -103,9 +109,7 @@
           <!-- Subjects -->
           <div class="flex flex-col gap-4">
             <div class="flex items-center justify-between">
-              <div class="text-xl font-medium text-surface-900 dark:text-surface-0">
-                Subjects
-              </div>
+              <div class="text-xl font-medium text-surface-900 dark:text-surface-0">Subjects</div>
               <Button
                 v-if="!showAddSubject"
                 label="Add Subject"
@@ -144,7 +148,9 @@
             <!-- Add Subject -->
             <div v-if="showAddSubject" class="flex items-end gap-3">
               <div class="flex flex-col gap-2 flex-1">
-                <label for="edit-subject-user" class="text-sm text-surface-900 dark:text-surface-0">User</label>
+                <label for="edit-subject-user" class="text-sm text-surface-900 dark:text-surface-0"
+                  >User</label
+                >
                 <Select
                   id="edit-subject-user"
                   v-model="newSubject.user_id"
@@ -157,7 +163,9 @@
                 />
               </div>
               <div class="flex flex-col gap-2 flex-1">
-                <label for="edit-subject-role" class="text-sm text-surface-900 dark:text-surface-0">Role</label>
+                <label for="edit-subject-role" class="text-sm text-surface-900 dark:text-surface-0"
+                  >Role</label
+                >
                 <Select
                   id="edit-subject-role"
                   v-model="newSubject.role"

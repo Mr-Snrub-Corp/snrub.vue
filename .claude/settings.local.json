@@ -3,7 +3,9 @@
     "allow": [
       "Bash(npx vue-tsc:*)",
       "WebFetch(domain:primevue.org)",
-      "mcp__ide__getDiagnostics"
+      "mcp__ide__getDiagnostics",
+      "Bash(npx prettier *)",
+      "Bash(npm run *)"
     ]
   }
 }

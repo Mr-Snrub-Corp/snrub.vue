@@ -42,13 +42,20 @@
             </div>
             <div>
               <div class="text-sm text-zinc-500 dark:text-zinc-400 mb-1">Email</div>
-              <div class="text-surface-900 dark:text-surface-0" data-testid="employees.detail.email">
+              <div
+                class="text-surface-900 dark:text-surface-0"
+                data-testid="employees.detail.email"
+              >
                 {{ user.email }}
               </div>
             </div>
             <div>
               <div class="text-sm text-zinc-500 dark:text-zinc-400 mb-1">Role</div>
-              <Tag :value="formatLabel(user.role)" severity="info" data-testid="employees.detail.role" />
+              <Tag
+                :value="formatLabel(user.role)"
+                severity="info"
+                data-testid="employees.detail.role"
+              />
             </div>
             <div>
               <div class="text-sm text-zinc-500 dark:text-zinc-400 mb-1">Status</div>

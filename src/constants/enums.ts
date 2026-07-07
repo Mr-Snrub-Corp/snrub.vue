@@ -45,4 +45,3 @@ export const SUBJECT_ROLE = {
   INVOLVED: "involved",
   WITNESS: "witness",
 } as const;
-

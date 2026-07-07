@@ -15,8 +15,7 @@ vi.mock("@/stores/auth", () => ({
 
 vi.mock("@/stores/users", () => ({
   useUsersStore: () => ({
-    getUserById: (uid: string) =>
-      uid === "u1" ? { photo: mockUserPhoto } : undefined,
+    getUserById: (uid: string) => (uid === "u1" ? { photo: mockUserPhoto } : undefined),
   }),
 }));
 

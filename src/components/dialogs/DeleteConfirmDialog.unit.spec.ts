@@ -25,10 +25,7 @@ type DeleteConfirmDialogProps = {
   confirmButtonLabel?: string;
 };
 
-const mountDialog = (
-  props: DeleteConfirmDialogProps = {},
-  slots: Record<string, string> = {},
-) => {
+const mountDialog = (props: DeleteConfirmDialogProps = {}, slots: Record<string, string> = {}) => {
   return shallowMount(DeleteConfirmDialog, {
     props: {
       isVisible: true,

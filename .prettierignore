@@ -1,0 +1,7 @@
+# Vendored PrimeVue component styles — copied from PrimeVue, do not reformat
+src/assets/primevue/
+
+# Build output / generated
+dist/
+dist-ssr/
+coverage/
