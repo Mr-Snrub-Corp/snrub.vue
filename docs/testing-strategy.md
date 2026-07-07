@@ -55,7 +55,9 @@ src/test/
 - Add `@vitest/coverage-v8` + coverage block (reporters `['text','html','json-summary','lcov']`, `all:true`, exclusions per [Coverage policy](#coverage-policy)) — **thresholds OFF**. Enables local `vitest run --coverage`; CI wiring is P2.
 - Add devDeps: `@vitest/coverage-v8`, `msw`, `@pinia/testing`.
 
-### PR 1b — first tests on the new harness
+### PR 1b — first tests on the new harness — ✅ done
+
+_Result: 12 test files / 141 tests, total line coverage ~25% (from ~10%). Harness built with real consumers: `renderWithPlugins`, `makeUser`/`makeIncidentType` factories, MSW server/handlers + test API base in `vitest.config` (`test.env`), global `setup.ts` (MSW lifecycle). The Login MSW integration also lifted `httpService` to ~37% for free._
 
 **Unit (targeted)**
 

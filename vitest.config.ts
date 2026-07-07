@@ -7,6 +7,10 @@ export default mergeConfig(
   defineConfig({
     test: {
       environment: 'jsdom',
+      setupFiles: ['src/test/setup.ts'],
+      // Test-only API base. No real endpoint is hit — MSW intercepts at fetch.
+      // Vitest exposes test.env on import.meta.env, matching how the app reads it.
+      env: { VITE_API_URL: 'http://localhost:8000' },
       exclude: [...configDefaults.exclude, 'e2e/**'],
       root: fileURLToPath(new URL('./', import.meta.url)),
       coverage: {
