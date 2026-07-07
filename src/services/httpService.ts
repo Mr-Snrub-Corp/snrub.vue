@@ -13,7 +13,7 @@ function getHeaders() {
     if (authStore.token) {
       return { ...headers, Authorization: `Bearer ${authStore.token}` };
     }
-  } catch (e) {
+  } catch {
     // If store can't be accessed (outside setup context)
     console.debug("Falling back to localStorage for auth token");
   }
@@ -32,7 +32,7 @@ function getAuthHeaders(): Record<string, string> {
     if (authStore.token) {
       return { Authorization: `Bearer ${authStore.token}` };
     }
-  } catch (e) {
+  } catch {
     console.debug("Falling back to localStorage for auth token");
   }
   return {}; // Return empty object if no token

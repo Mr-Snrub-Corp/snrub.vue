@@ -21,6 +21,7 @@ export const useAuthStore = defineStore(
       if (isLoggedIn.value) {
         return user.value;
       }
+      return null;
     });
     const isAdmin = computed(() => {
       const role = user.value?.role;

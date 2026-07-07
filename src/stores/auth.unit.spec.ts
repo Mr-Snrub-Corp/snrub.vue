@@ -154,7 +154,7 @@ describe("useAuthStore", () => {
     it("API called with { email }", async () => {
       vi.mocked(api.auth.requestPasswordReset).mockResolvedValue(mockResetEmailResponse);
       const store = useAuthStore();
-      const result = await store.requestReset(mockResetEmail);
+      await store.requestReset(mockResetEmail);
 
       expect(api.auth.requestPasswordReset).toHaveBeenCalledWith(mockResetEmail);
     });

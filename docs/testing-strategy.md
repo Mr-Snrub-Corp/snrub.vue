@@ -32,13 +32,12 @@ The `src/test/` harness is a prerequisite for both the component migration and t
 
 ### PR 1a — static hygiene + scaffolding
 
-**Static fixes**
+**Static fixes** — ✅ done
 
-- **Resolve prettier conflict:** `.prettierrc` (`semi:true`, `singleQuote:false`) vs `.prettierrc.json` (`semi:false`, `singleQuote:true`) contradict; Prettier picks one non-deterministically. The codebase uses semicolons + double quotes → **delete `.prettierrc.json`, keep `.prettierrc`, add `printWidth:100`**. Keep `@vue/eslint-config-prettier` `skip-formatting` in `eslint.config.ts`.
-- Add scripts: `lint:ci` = `eslint .` (no `--fix`), `format:check` = `prettier --check src/`. Keep `lint` (`--fix`) for local.
-- Add `husky` + `lint-staged` pre-commit: `eslint --fix` + `prettier --write` on staged `*.{ts,vue}`. Type-check/vitest stay in CI (too slow for pre-commit).
-- Add `"packageManager": "npm@<version>"` to `package.json`.
-- Ratchet `@typescript-eslint/no-explicit-any` to **warning** (existing violations in `httpService.ts`/`errors.ts` block an error-level rule for now).
+- **Prettier conflict resolved:** deleted `.prettierrc.json`; kept `.prettierrc` with `printWidth:100` (matches `.editorconfig`'s `max_line_length`). Added `.prettierignore` (vendored `src/assets/primevue/**` + build dirs). One-time reformat of `src/`. Kept `skip-formatting` in `eslint.config.ts`.
+- **Format-on-save (shared):** `.vscode/settings.json` (Prettier default formatter + `formatOnSave`), committed via a `!.vscode/settings.json` exception in `.gitignore`. **No pre-commit hook** — chose format-on-save + the Phase 2 CI gates over husky/lint-staged.
+- **Scripts:** added `lint:ci` = `eslint .` and `format:check` = `prettier --check src/`; kept `lint` (`--fix`) local. Added `"packageManager": "npm@10.9.4"`.
+- **eslint baseline → green:** ratcheted `@typescript-eslint/no-explicit-any` to **warning**; exempted `vue/multi-word-component-names` for `src/views/**`, `no-require-imports` for `*.config.*`, and `no-empty-object-type`/`no-unused-vars` for `**/*.d.ts`; fixed 5 small source lint errors (2 unused catch vars in `httpService`, 1 unused test var, explicit `return null` in `getAuthUser`, `lang="ts"` on `AuthIndex`). `eslint .` now reports 0 errors / 8 `any` warnings.
 
 **Scaffolding (`src/test/`)**
 
