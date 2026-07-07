@@ -18,6 +18,10 @@ coverage
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
+
+# Claude Code per-developer settings (keep local, never commit)
+.claude/settings.local.json
+
 .idea
 *.suo
 *.ntvs*

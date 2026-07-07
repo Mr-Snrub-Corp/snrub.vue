@@ -6,7 +6,7 @@ import { useAuthStore } from "../stores/auth";
 import router from "@/router";
 
 // Function that works with both store and fallback to localStorage
-function getHeaders() {
+function getHeaders(): Record<string, string> {
   // Try to get from store first
   try {
     const authStore = useAuthStore();
@@ -23,6 +23,9 @@ function getHeaders() {
   // return token
   //   ? { ...headers, "Authorization": `Bearer ${token}` }
   //   : headers;
+
+  // No token: still return the base JSON headers so Content-Type isn't dropped.
+  return headers;
 }
 
 // Function for multipart/form-data requests (no Content-Type header)
