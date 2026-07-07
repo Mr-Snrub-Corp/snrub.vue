@@ -36,7 +36,9 @@
         :icon="userPhoto ? undefined : 'pi pi-user'"
         shape="circle"
         class="border border-surface-300"
-        :aria-label="authStore.user?.name ? `${authStore.user.name}'s profile picture` : 'User profile picture'"
+        :aria-label="
+          authStore.user?.name ? `${authStore.user.name}'s profile picture` : 'User profile picture'
+        "
       />
     </div>
   </header>

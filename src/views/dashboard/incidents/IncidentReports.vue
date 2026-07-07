@@ -51,7 +51,11 @@
         <div class="flex justify-end">
           <IconField>
             <InputIcon class="pi pi-search" />
-            <InputText v-model="filters['global'].value" placeholder="Keyword Search" aria-label="Search incident reports" />
+            <InputText
+              v-model="filters['global'].value"
+              placeholder="Keyword Search"
+              aria-label="Search incident reports"
+            />
           </IconField>
         </div>
       </template>

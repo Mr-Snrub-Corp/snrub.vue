@@ -91,4 +91,3 @@ describe("timeAgo", () => {
     expect(timeAgo("2025-01-14T12:00:00Z")).toBe("1d ago");
   });
 });
-

@@ -6,14 +6,14 @@ import { useAuthStore } from "../stores/auth";
 import router from "@/router";
 
 // Function that works with both store and fallback to localStorage
-function getHeaders() {
+function getHeaders(): Record<string, string> {
   // Try to get from store first
   try {
     const authStore = useAuthStore();
     if (authStore.token) {
       return { ...headers, Authorization: `Bearer ${authStore.token}` };
     }
-  } catch (e) {
+  } catch {
     // If store can't be accessed (outside setup context)
     console.debug("Falling back to localStorage for auth token");
   }
@@ -23,6 +23,9 @@ function getHeaders() {
   // return token
   //   ? { ...headers, "Authorization": `Bearer ${token}` }
   //   : headers;
+
+  // No token: still return the base JSON headers so Content-Type isn't dropped.
+  return headers;
 }
 
 // Function for multipart/form-data requests (no Content-Type header)
@@ -32,7 +35,7 @@ function getAuthHeaders(): Record<string, string> {
     if (authStore.token) {
       return { Authorization: `Bearer ${authStore.token}` };
     }
-  } catch (e) {
+  } catch {
     console.debug("Falling back to localStorage for auth token");
   }
   return {}; // Return empty object if no token

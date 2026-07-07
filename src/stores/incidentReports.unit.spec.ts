@@ -1,7 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 import { INCIDENT_STATUS, ESCALATION_LEVEL, SUBJECT_ROLE } from "@/constants/enums";
-import type { IncidentReport, IncidentReportCreate, IncidentReportUpdate } from "@/types/incidentReport";
+import type {
+  IncidentReport,
+  IncidentReportCreate,
+  IncidentReportUpdate,
+} from "@/types/incidentReport";
 import api from "@/services/httpService";
 import { useIncidentReportsStore } from "./incidentReports";
 

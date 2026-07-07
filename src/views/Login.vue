@@ -5,9 +5,7 @@
         <RouterLink to="/" class="inline-block mb-4" aria-label="Snrub Corp home">
           <DashboardLogo :size="56" />
         </RouterLink>
-        <h1 class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">
-          Welcome Back
-        </h1>
+        <h1 class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Welcome Back</h1>
       </div>
       <div>
         <form @submit.prevent="handleLogin">
@@ -88,9 +86,14 @@
           </div>
         </form>
       </div>
-      <Message v-if="errorMessage" class="mt-4" severity="error" size="small" data-testid="auth.login-form.error-message">{{
-        errorMessage
-      }}</Message>
+      <Message
+        v-if="errorMessage"
+        class="mt-4"
+        severity="error"
+        size="small"
+        data-testid="auth.login-form.error-message"
+        >{{ errorMessage }}</Message
+      >
     </main>
     <div
       aria-hidden="true"

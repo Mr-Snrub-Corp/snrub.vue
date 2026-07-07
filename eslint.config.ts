@@ -28,4 +28,40 @@ export default defineConfigWithVueTs(
   },
   
   skipFormatting,
+
+  {
+    name: 'app/rules',
+    rules: {
+      // CLAUDE.md forbids `any`; ratcheted to warn while existing usages are cleared.
+      '@typescript-eslint/no-explicit-any': 'warn',
+    },
+  },
+
+  {
+    // Pages/layouts are conventionally single-word; rule stays enforced for components/**.
+    name: 'app/views-single-word',
+    files: ['src/views/**/*.vue'],
+    rules: {
+      'vue/multi-word-component-names': 'off',
+    },
+  },
+
+  {
+    // Config files legitimately use CommonJS require().
+    name: 'app/config-files',
+    files: ['**/*.config.{js,cjs,mjs,ts,cts,mts}'],
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+    },
+  },
+
+  {
+    // Declaration/shim files use `{}` and augmentation type-params by design.
+    name: 'app/declaration-files',
+    files: ['**/*.d.ts'],
+    rules: {
+      '@typescript-eslint/no-empty-object-type': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
+    },
+  },
 )

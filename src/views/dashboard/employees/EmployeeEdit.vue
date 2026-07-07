@@ -115,7 +115,9 @@
                 <img
                   v-else
                   :src="getUserAvatar"
-                  :alt="formData.name ? `${formData.name} profile picture` : 'Employee profile picture'"
+                  :alt="
+                    formData.name ? `${formData.name} profile picture` : 'Employee profile picture'
+                  "
                   class="h-32 w-32 rounded-lg object-cover border border-surface-300"
                 />
                 <FileUpload

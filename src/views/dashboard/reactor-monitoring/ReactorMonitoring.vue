@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="px-6 py-4 md:px-12 md:py-6 lg:px-20 lg:py-8 bg-surface-50 dark:bg-surface-950 flex-1"
-  >
+  <div class="px-6 py-4 md:px-12 md:py-6 lg:px-20 lg:py-8 bg-surface-50 dark:bg-surface-950 flex-1">
     <h1 class="text-3xl font-bold text-surface-900 dark:text-surface-0 mb-6">Reactor Monitoring</h1>
 
     <Message
@@ -48,7 +46,11 @@
               class="h-7 w-7 rounded-md flex items-center justify-center"
               :style="{ background: statusBg(reactorPowerStatus) }"
             >
-              <i aria-hidden="true" class="pi pi-bolt text-xs" :style="{ color: statusColor(reactorPowerStatus) }" />
+              <i
+                aria-hidden="true"
+                class="pi pi-bolt text-xs"
+                :style="{ color: statusColor(reactorPowerStatus) }"
+              />
             </div>
             <Tag
               :severity="getReactorStatusSeverity(reactorPowerStatus)"
@@ -94,7 +96,11 @@
               class="h-7 w-7 rounded-md flex items-center justify-center"
               :style="{ background: statusBg(coreTemperatureStatus) }"
             >
-              <i aria-hidden="true" class="pi pi-sun text-xs" :style="{ color: statusColor(coreTemperatureStatus) }" />
+              <i
+                aria-hidden="true"
+                class="pi pi-sun text-xs"
+                :style="{ color: statusColor(coreTemperatureStatus) }"
+              />
             </div>
             <Tag
               :severity="getReactorStatusSeverity(coreTemperatureStatus)"
@@ -140,7 +146,11 @@
               class="h-7 w-7 rounded-md flex items-center justify-center"
               :style="{ background: statusBg(coolantFlowStatus) }"
             >
-              <i aria-hidden="true" class="pi pi-refresh text-xs" :style="{ color: statusColor(coolantFlowStatus) }" />
+              <i
+                aria-hidden="true"
+                class="pi pi-refresh text-xs"
+                :style="{ color: statusColor(coolantFlowStatus) }"
+              />
             </div>
             <Tag
               :severity="getReactorStatusSeverity(coolantFlowStatus)"
@@ -229,7 +239,9 @@
               :style="{ color: statusColor(radiationStatus) }"
             >
               {{ reactorData.radiation_level?.toFixed(2) }}
-              <span class="text-base font-normal text-surface-600 dark:text-surface-400">mSv/h</span>
+              <span class="text-base font-normal text-surface-600 dark:text-surface-400"
+                >mSv/h</span
+              >
             </div>
           </div>
           <div class="flex grow justify-between items-center gap-2">
@@ -288,7 +300,11 @@
               class="h-7 w-7 rounded-md flex items-center justify-center"
               :style="{ background: statusBg(containmentStatus) }"
             >
-              <i aria-hidden="true" class="pi pi-shield text-xs" :style="{ color: statusColor(containmentStatus) }" />
+              <i
+                aria-hidden="true"
+                class="pi pi-shield text-xs"
+                :style="{ color: statusColor(containmentStatus) }"
+              />
             </div>
             <Tag
               :severity="getReactorStatusSeverity(containmentStatus)"
