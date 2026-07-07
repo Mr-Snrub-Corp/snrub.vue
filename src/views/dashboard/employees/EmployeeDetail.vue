@@ -29,7 +29,7 @@
           <div class="flex-shrink-0">
             <img
               :src="getUserAvatar"
-              alt="Employee avatar"
+              :alt="user.name ? `${user.name} profile picture` : 'Employee profile picture'"
               class="h-32 w-32 rounded-lg object-cover border border-surface-300"
             />
           </div>

@@ -55,7 +55,7 @@ describe("DashboardNavbar", () => {
 
   it("emits toggle-drawer on hamburger click", async () => {
     const wrapper = mountNavbar();
-    await wrapper.find("a").trigger("click");
+    await wrapper.find('[data-testid="nav.navbar.menu-btn"]').trigger("click");
     expect(wrapper.emitted("toggle-drawer")).toHaveLength(1);
   });
 

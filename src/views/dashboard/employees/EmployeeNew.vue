@@ -20,9 +20,11 @@
               class="w-full"
               data-testid="employees.new-form.email-input"
               :invalid="v$.email.$error"
+              :aria-invalid="v$.email.$error ? 'true' : undefined"
+              :aria-describedby="v$.email.$error ? 'new-email-error' : undefined"
               @blur="v$.email.$touch()"
             />
-            <small v-if="v$.email.$error" class="text-red-500">
+            <small v-if="v$.email.$error" id="new-email-error" class="text-red-500">
               {{ v$.email.$errors[0]?.$message }}
             </small>
           </div>
@@ -36,9 +38,11 @@
               class="w-full"
               data-testid="employees.new-form.name-input"
               :invalid="v$.name.$error"
+              :aria-invalid="v$.name.$error ? 'true' : undefined"
+              :aria-describedby="v$.name.$error ? 'new-name-error' : undefined"
               @blur="v$.name.$touch()"
             />
-            <small v-if="v$.name.$error" class="text-red-500">
+            <small v-if="v$.name.$error" id="new-name-error" class="text-red-500">
               {{ v$.name.$errors[0]?.$message }}
             </small>
           </div>
@@ -55,9 +59,11 @@
               class="w-full"
               data-testid="employees.new-form.role-select"
               :invalid="v$.role.$error"
+              :aria-invalid="v$.role.$error ? 'true' : undefined"
+              :aria-describedby="v$.role.$error ? 'new-role-error' : undefined"
               @blur="v$.role.$touch()"
             />
-            <small v-if="v$.role.$error" class="text-red-500">
+            <small v-if="v$.role.$error" id="new-role-error" class="text-red-500">
               {{ v$.role.$errors[0]?.$message }}
             </small>
           </div>
@@ -76,9 +82,11 @@
               class="w-full"
               data-testid="employees.new-form.status-select"
               :invalid="v$.status.$error"
+              :aria-invalid="v$.status.$error ? 'true' : undefined"
+              :aria-describedby="v$.status.$error ? 'new-status-error' : undefined"
               @blur="v$.status.$touch()"
             />
-            <small v-if="v$.status.$error" class="text-red-500">
+            <small v-if="v$.status.$error" id="new-status-error" class="text-red-500">
               {{ v$.status.$errors[0]?.$message }}
             </small>
           </div>
@@ -93,9 +101,11 @@
               data-testid="employees.new-form.password-input"
               toggle-mask
               :invalid="v$.password.$error"
+              :aria-invalid="v$.password.$error ? 'true' : undefined"
+              :aria-describedby="v$.password.$error ? 'new-password-error' : undefined"
               @blur="v$.password.$touch()"
             />
-            <small v-if="v$.password.$error" class="text-red-500">
+            <small v-if="v$.password.$error" id="new-password-error" class="text-red-500">
               {{ v$.password.$errors[0]?.$message }}
             </small>
           </div>

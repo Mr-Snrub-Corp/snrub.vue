@@ -28,9 +28,11 @@
                 auto-resize
                 class="w-full"
                 :invalid="v$.description.$error"
+                :aria-invalid="v$.description.$error ? 'true' : undefined"
+                :aria-describedby="v$.description.$error ? 'edit-description-error' : undefined"
                 @blur="v$.description.$touch()"
               />
-              <small v-if="v$.description.$error" class="text-red-500">
+              <small v-if="v$.description.$error" id="edit-description-error" class="text-red-500">
                 {{ v$.description.$errors[0]?.$message }}
               </small>
             </div>
@@ -46,9 +48,11 @@
                 show-buttons
                 class="w-full"
                 :invalid="v$.severity.$error"
+                :aria-invalid="v$.severity.$error ? 'true' : undefined"
+                :aria-describedby="v$.severity.$error ? 'edit-severity-error' : undefined"
                 @blur="v$.severity.$touch()"
               />
-              <small v-if="v$.severity.$error" class="text-red-500">
+              <small v-if="v$.severity.$error" id="edit-severity-error" class="text-red-500">
                 {{ v$.severity.$errors[0]?.$message }}
               </small>
             </div>
@@ -64,9 +68,11 @@
                 option-value="value"
                 class="w-full"
                 :invalid="v$.status.$error"
+                :aria-invalid="v$.status.$error ? 'true' : undefined"
+                :aria-describedby="v$.status.$error ? 'edit-status-error' : undefined"
                 @blur="v$.status.$touch()"
               />
-              <small v-if="v$.status.$error" class="text-red-500">
+              <small v-if="v$.status.$error" id="edit-status-error" class="text-red-500">
                 {{ v$.status.$errors[0]?.$message }}
               </small>
             </div>
@@ -84,9 +90,11 @@
                 option-value="value"
                 class="w-full"
                 :invalid="v$.escalation_level.$error"
+                :aria-invalid="v$.escalation_level.$error ? 'true' : undefined"
+                :aria-describedby="v$.escalation_level.$error ? 'edit-escalation-error' : undefined"
                 @blur="v$.escalation_level.$touch()"
               />
-              <small v-if="v$.escalation_level.$error" class="text-red-500">
+              <small v-if="v$.escalation_level.$error" id="edit-escalation-error" class="text-red-500">
                 {{ v$.escalation_level.$errors[0]?.$message }}
               </small>
             </div>
@@ -120,6 +128,7 @@
                 <Tag :value="formatLabel(subject.role)" severity="info" />
                 <Button
                   icon="pi pi-times"
+                  :aria-label="`Remove ${getSubjectName(subject.user_id)}`"
                   severity="danger"
                   variant="text"
                   rounded
@@ -135,8 +144,9 @@
             <!-- Add Subject -->
             <div v-if="showAddSubject" class="flex items-end gap-3">
               <div class="flex flex-col gap-2 flex-1">
-                <label class="text-sm text-surface-900 dark:text-surface-0">User</label>
+                <label for="edit-subject-user" class="text-sm text-surface-900 dark:text-surface-0">User</label>
                 <Select
+                  id="edit-subject-user"
                   v-model="newSubject.user_id"
                   :options="availableUsers"
                   option-label="name"
@@ -147,8 +157,9 @@
                 />
               </div>
               <div class="flex flex-col gap-2 flex-1">
-                <label class="text-sm text-surface-900 dark:text-surface-0">Role</label>
+                <label for="edit-subject-role" class="text-sm text-surface-900 dark:text-surface-0">Role</label>
                 <Select
+                  id="edit-subject-role"
                   v-model="newSubject.role"
                   :options="subjectRoleOptions"
                   option-label="label"

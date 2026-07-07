@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <main id="main-content">
     <div class="h-screen flex lg:flex-row flex-col gap-4 bg-surface-0 dark:bg-surface-900">
       <div class="flex-1 flex items-center justify-center">
         <div class="p-6 pt-12 lg:p-12">
@@ -28,7 +28,7 @@
       <div class="flex-1 overflow-hidden">
         <img
           src="/img/power-plant-hero.png"
-          alt="hero-1"
+          alt="Aerial view of a nuclear power plant"
           class="h-full w-full object-cover lg:[clip-path:polygon(12%_0,100%_0%,100%_100%,0_100%)]"
         />
       </div>
@@ -36,10 +36,5 @@
   </main>
 </template>
 <script setup lang="ts">
-import { useTitle } from "@vueuse/core";
 import Button from "primevue/button";
-
-const title = useTitle();
-
-title.value = "Snrub Corp | Welcome";
 </script>

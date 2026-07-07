@@ -88,6 +88,12 @@ Keep this section up to date whenever a new `data-testid` is added or removed.
 | `nav.sidebar.reactor-monitoring-link` | Reactor Monitoring nav link |
 | `nav.sidebar.logout-btn` | Logout button |
 
+### Navigation — `src/components/dashboard/DashboardNavbar.vue`
+
+| Test ID | Element |
+|---|---|
+| `nav.navbar.menu-btn` | Hamburger / open navigation menu button |
+
 ### Auth — `src/views/Login.vue`
 
 | Test ID | Element |

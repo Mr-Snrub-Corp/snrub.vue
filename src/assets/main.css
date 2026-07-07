@@ -94,10 +94,10 @@
 
 /* Light */
 :root {
-  --p-primary-color: var(--p-primary-700);
+  --p-primary-color: var(--p-primary-800);
   /* --p-primary-contrast-color: var(--p-surface-0); */
-  --p-primary-hover-color: var(--p-primary-800);
-  --p-primary-active-color: var(--p-primary-700);
+  --p-primary-hover-color: var(--p-primary-900);
+  --p-primary-active-color: var(--p-primary-800);
   --p-content-border-color: var(--p-surface-200);
   --p-content-hover-background: var(--p-surface-100);
   --p-content-hover-color: var(--p-surface-800);

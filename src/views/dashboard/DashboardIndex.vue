@@ -3,16 +3,22 @@
     <DashboardSidebar @logout="handleLogout" />
     <DashboardDrawer v-model="drawerVisible" @logout="handleLogout" />
     <div class="h-screen flex flex-col relative flex-auto">
-      <DashboardNavbar @toggle-drawer="drawerVisible = true" />
-      <div v-if="isLoading" class="flex justify-center items-center h-full">
+      <DashboardNavbar :drawer-open="drawerVisible" @toggle-drawer="drawerVisible = true" />
+      <div
+        v-if="isLoading"
+        class="flex justify-center items-center h-full"
+        role="status"
+        aria-label="Loading dashboard"
+      >
         <ProgressSpinner />
       </div>
-      <div
+      <main
         v-else
+        id="main-content"
         class="flex flex-col flex-auto min-h-0 overflow-y-auto bg-surface-0 dark:bg-surface-950"
       >
         <router-view />
-      </div>
+      </main>
     </div>
   </div>
 </template>
@@ -25,13 +31,8 @@ import { useUsersStore } from "@/stores/users";
 import { useAuthStore } from "@/stores/auth";
 import { onBeforeMount, ref } from "vue";
 import { useRouter } from "vue-router";
-import { useTitle } from "@vueuse/core";
 import { useIncidentTypesStore } from "@/stores/incidentTypes";
 import { useIncidentReportsStore } from "@/stores/incidentReports";
-
-const title = useTitle();
-
-title.value = "Snrub Corp | Dashboard";
 
 const router = useRouter();
 const usersStore = useUsersStore();

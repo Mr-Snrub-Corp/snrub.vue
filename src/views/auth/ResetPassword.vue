@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen w-full bg-surface-50 dark:bg-surface-950 px-6 py-20 md:px-12 lg:px-20">
+  <main id="main-content" class="h-screen w-full bg-surface-50 dark:bg-surface-950 px-6 py-20 md:px-12 lg:px-20">
     <div
       class="bg-surface-0 dark:bg-surface-900 p-8 md:p-12 shadow-sm rounded-2xl w-full max-w-xl mx-auto flex flex-col gap-8"
     >
@@ -8,14 +8,14 @@
           <DashboardLogo :size="56" />
         </div>
         <div class="flex flex-col items-center gap-2 w-full">
-          <div
+          <h1
             class="text-surface-900 dark:text-surface-0 text-2xl font-semibold leading-tight text-center w-full"
           >
-            Lets Reset
-          </div>
+            Reset Your Password
+          </h1>
         </div>
       </div>
-      <div class="flex flex-col gap-6 w-full">
+      <form @submit.prevent="handleReset" class="flex flex-col gap-6 w-full">
         <div class="flex flex-col gap-2 w-full">
           <div class="flex flex-col gap-2 w-full">
             <div class="flex justify-between w-full">
@@ -28,20 +28,22 @@
                 ></i
               ></span> -->
               <Button
+                type="button"
                 class="p-0"
                 severity="secondary"
                 variant="text"
                 rounded
-                aria-label="Toggle password visibility"
+                aria-label="Toggle new password visibility"
                 @click="togglePasswordVisibility('passwordType')"
                 ><i
                   :class="[
                     'pi',
                     {
-                      'pi-eye': confirmPasswordType === 'password',
-                      'pi-eye-slash': confirmPasswordType === 'text',
+                      'pi-eye': passwordType === 'password',
+                      'pi-eye-slash': passwordType === 'text',
                     },
                   ]"
+                  aria-hidden="true"
                 ></i
               ></Button>
             </div>
@@ -51,8 +53,10 @@
               v-model="password"
               placeholder="Enter new password"
               class="w-full px-3 py-2 shadow-sm rounded-lg"
+              :aria-invalid="v$.password.$invalid ? 'true' : undefined"
+              :aria-describedby="v$.password.$invalid ? 'password-error' : undefined"
             />
-            <Message v-if="v$.password.$invalid" severity="error" size="small" variant="simple">{{
+            <Message v-if="v$.password.$invalid" id="password-error" severity="error" size="small" variant="simple">{{
               v$.password.$errors[0]?.$message
             }}</Message>
           </div>
@@ -64,11 +68,12 @@
                 >Confirm Password</label
               >
               <Button
+                type="button"
                 class="p-0"
                 severity="secondary"
                 variant="text"
                 rounded
-                aria-label="Toggle password visibility"
+                aria-label="Toggle confirm password visibility"
                 @click="togglePasswordVisibility('confirmPasswordType')"
                 ><i
                   :class="[
@@ -78,6 +83,7 @@
                       'pi-eye-slash': confirmPasswordType === 'text',
                     },
                   ]"
+                  aria-hidden="true"
                 ></i
               ></Button>
             </div>
@@ -87,9 +93,12 @@
               v-model="confirmPassword"
               placeholder="Confirm password"
               class="w-full px-3 py-2 shadow-sm rounded-lg"
+              :aria-invalid="v$.confirmPassword.$invalid ? 'true' : undefined"
+              :aria-describedby="v$.confirmPassword.$invalid ? 'confirmPassword-error' : undefined"
             />
             <Message
               v-if="v$.confirmPassword.$invalid"
+              id="confirmPassword-error"
               severity="error"
               size="small"
               variant="simple"
@@ -98,19 +107,19 @@
           </div>
         </div>
         <Button
+          type="submit"
           label="Reset Password"
           severity="primary"
           icon="pi pi-user"
           class="w-full py-2 rounded-lg flex justify-center items-center gap-2"
-          @click="handleReset"
         >
           <template #icon>
-            <i class="pi pi-user !text-base !leading-normal" />
+            <i class="pi pi-user !text-base !leading-normal" aria-hidden="true" />
           </template>
         </Button>
-      </div>
+      </form>
     </div>
-  </div>
+  </main>
 </template>
 
 <script setup lang="ts">
