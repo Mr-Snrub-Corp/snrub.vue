@@ -193,10 +193,11 @@ const router = createRouter({
 router.afterEach((to) => {
   document.title = to.meta.title ?? "Snrub Corp";
   nextTick(() => {
-    const h1 = document.querySelector<HTMLElement>("#main-content h1");
-    if (h1) {
-      h1.setAttribute("tabindex", "-1");
-      h1.focus({ preventScroll: false });
+    const main = document.querySelector<HTMLElement>("#main-content");
+    const target = main?.querySelector<HTMLElement>("h1") ?? main;
+    if (target) {
+      target.setAttribute("tabindex", "-1");
+      target.focus({ preventScroll: false });
     }
   });
 });
