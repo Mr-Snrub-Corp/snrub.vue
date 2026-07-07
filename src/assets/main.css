@@ -1,5 +1,11 @@
 @import "primeicons/primeicons.css";
 
+/* Suppress focus ring on elements focused programmatically (tabindex="-1").
+   These cannot receive keyboard focus via Tab, so hiding the outline is safe. */
+[tabindex="-1"]:focus {
+  outline: none;
+}
+
 /* Primary and Surface Palettes */
 :root {
   --p-primary-25: #f8f5ff;
