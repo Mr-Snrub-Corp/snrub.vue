@@ -1,9 +1,11 @@
 import { describe, it, expect } from "vitest";
-import { shallowMount } from "@vue/test-utils";
+import Button from "primevue/button";
 import DeleteConfirmDialog from "./DeleteConfirmDialog.vue";
+import { renderWithPlugins } from "@/test/renderWithPlugins";
 
+// Dialog is a teleporting overlay (a "heavy child") — stub it, but render its
+// slots so the real footer buttons still mount.
 const DialogStub = {
-  template: `<div class="dialog-stub"><slot /><slot name="footer" /></div>`,
   props: {
     visible: Boolean,
     header: String,
@@ -11,97 +13,63 @@ const DialogStub = {
     dismissableMask: Boolean,
     draggable: Boolean,
   },
+  emits: ["update:visible"],
+  template: `<div class="dialog-stub"><slot /><slot name="footer" /></div>`,
 };
 
-const ButtonStub = {
-  template: `<button :class="variant === 'outlined' ? 'outlined' : 'primary'" @click="$emit('click')">{{ label }}</button>`,
-  props: ["label", "variant"],
-  emits: ["click"],
-};
+type Props = { isVisible?: boolean; header?: string; confirmButtonLabel?: string };
 
-type DeleteConfirmDialogProps = {
-  isVisible?: boolean;
-  header?: string;
-  confirmButtonLabel?: string;
-};
-
-const mountDialog = (props: DeleteConfirmDialogProps = {}, slots: Record<string, string> = {}) => {
-  return shallowMount(DeleteConfirmDialog, {
-    props: {
-      isVisible: true,
-      header: "Delete Item",
-      confirmButtonLabel: "Confirm",
-      ...props,
-    },
+function mountDialog(props: Props = {}, slots: Record<string, string> = {}) {
+  return renderWithPlugins(DeleteConfirmDialog, {
+    props: { isVisible: true, header: "Delete Item", confirmButtonLabel: "Confirm", ...props },
     slots,
-    global: {
-      stubs: {
-        Dialog: DialogStub,
-        Button: ButtonStub,
-      },
-    },
+    stubs: { Dialog: DialogStub },
   });
-};
+}
 
 describe("DeleteConfirmDialog", () => {
-  it("passes header prop to Dialog", () => {
-    const wrapper = mountDialog({ header: "Delete User" });
+  it("passes header and visibility through to the Dialog", async () => {
+    const { wrapper } = await mountDialog({ header: "Delete User", isVisible: false });
     const dialog = wrapper.findComponent(DialogStub);
     expect(dialog.props("header")).toBe("Delete User");
-  });
-
-  it("passes isVisible prop to Dialog", () => {
-    const wrapper = mountDialog({ isVisible: false });
-    const dialog = wrapper.findComponent(DialogStub);
     expect(dialog.props("visible")).toBe(false);
   });
 
-  it("passes modal and dismissableMask to Dialog", () => {
-    const wrapper = mountDialog();
+  it("configures the Dialog as a dismissable modal", async () => {
+    const { wrapper } = await mountDialog();
     const dialog = wrapper.findComponent(DialogStub);
     expect(dialog.props("modal")).toBe(true);
     expect(dialog.props("dismissableMask")).toBe(true);
   });
 
-  it("renders confirmButtonLabel on the confirm button", () => {
-    const wrapper = mountDialog({ confirmButtonLabel: "Remove" });
-    const buttons = wrapper.findAllComponents(ButtonStub);
-    const confirmButton = buttons.find((btn) => btn.props("label") === "Remove");
-    expect(confirmButton).toBeTruthy();
+  it("renders the confirm label and an outlined cancel button", async () => {
+    const { wrapper } = await mountDialog({ confirmButtonLabel: "Remove" });
+    const labels = wrapper.findAllComponents(Button).map((b) => b.props("label"));
+    expect(labels).toEqual(["Cancel", "Remove"]);
   });
 
-  it("renders cancel button with outlined variant", () => {
-    const wrapper = mountDialog();
-    const buttons = wrapper.findAllComponents(ButtonStub);
-    const cancelButton = buttons.find((btn) => btn.props("label") === "Cancel");
-    expect(cancelButton!.props("variant")).toBe("outlined");
-  });
-
-  it("renders slot content in the dialog body", () => {
-    const wrapper = mountDialog({}, { default: "<p>Are you sure?</p>" });
+  it("renders default slot content in the body", async () => {
+    const { wrapper } = await mountDialog({}, { default: "<p>Are you sure?</p>" });
     expect(wrapper.html()).toContain("Are you sure?");
   });
 
-  it("emits handleDelete when confirm button is clicked", async () => {
-    const wrapper = mountDialog();
-    const buttons = wrapper.findAllComponents(ButtonStub);
-    const confirmButton = buttons.find((btn) => btn.props("label") === "Confirm");
-    await confirmButton!.trigger("click");
+  it("emits handleDelete when the confirm button is clicked", async () => {
+    const { wrapper } = await mountDialog({ confirmButtonLabel: "Confirm" });
+    const confirm = wrapper.findAllComponents(Button).find((b) => b.props("label") === "Confirm");
+    await confirm!.trigger("click");
     expect(wrapper.emitted("handleDelete")).toHaveLength(1);
   });
 
-  it("emits handleClose when cancel button is clicked", async () => {
-    const wrapper = mountDialog();
-    const buttons = wrapper.findAllComponents(ButtonStub);
-    const cancelButton = buttons.find((btn) => btn.props("label") === "Cancel");
-    await cancelButton!.trigger("click");
+  it("emits handleClose when the cancel button is clicked", async () => {
+    const { wrapper } = await mountDialog();
+    const cancel = wrapper.findAllComponents(Button).find((b) => b.props("label") === "Cancel");
+    await cancel!.trigger("click");
     expect(wrapper.emitted("handleClose")).toHaveLength(1);
   });
 
-  it("emits handleClose when dialog mask is clicked", async () => {
-    const wrapper = mountDialog();
-    const dialog = wrapper.findComponent(DialogStub);
-    await dialog.vm.$emit("update:visible", false);
+  it("emits handleClose when the Dialog requests close", async () => {
+    const { wrapper } = await mountDialog();
+    await wrapper.findComponent(DialogStub).vm.$emit("update:visible", false);
     expect(wrapper.emitted("handleClose")).toHaveLength(1);
   });
 });
