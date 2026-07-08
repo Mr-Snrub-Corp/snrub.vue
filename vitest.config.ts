@@ -15,7 +15,10 @@ export default mergeConfig(
       root: fileURLToPath(new URL('./', import.meta.url)),
       coverage: {
         provider: 'v8',
-        reporter: ['text', 'html', 'json-summary', 'lcov'],
+        // 'json' + 'json-summary' feed davelosert/vitest-coverage-report-action (per-file + summary).
+        reporter: ['text', 'html', 'json', 'json-summary', 'lcov'],
+        // Emit coverage even when a test fails so the PR comment still posts.
+        reportOnFailure: true,
         // Count untested files, not just imported ones.
         all: true,
         include: ['src/**/*.{ts,vue}'],
