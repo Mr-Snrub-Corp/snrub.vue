@@ -1,28 +1,61 @@
-name: Test & Build
+name: CI
 
 on:
   pull_request:
     branches: [main]
 
-jobs:
-  test-and-build:
-    runs-on: ubuntu-latest
+permissions:
+  contents: read
 
+jobs:
+  static:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version-file: .nvmrc
           cache: npm
-
       - run: npm ci
-
+      - name: Lint
+        run: npm run lint:ci
+      - name: Format check
+        run: npm run format:check
       - name: Type check
-        run: npx vue-tsc --build
+        run: npm run type-check
 
-      - name: Unit tests
-        run: npx vitest run
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write # coverage PR comment
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Unit tests + coverage
+        run: npx vitest run --coverage
+      - name: Upload coverage HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-html
+          path: coverage/
+      - name: Coverage PR comment
+        if: always()
+        uses: davelosert/vitest-coverage-report-action@v2
 
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
       - name: Build
         run: npm run build-only
