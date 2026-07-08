@@ -45,8 +45,12 @@ jobs:
           name: coverage-html
           path: coverage/
       - name: Coverage PR comment
-        if: always()
-        uses: davelosert/vitest-coverage-report-action@v2
+        # Skip on fork PRs (read-only token can't post) and never let a
+        # cosmetic comment failure fail the required `test` check.
+        if: always() && github.event.pull_request.head.repo.full_name == github.repository
+        continue-on-error: true
+        # Pinned to a full SHA (supply-chain hardening); SHA == tag v2.12.1.
+        uses: davelosert/vitest-coverage-report-action@3c054a2d2e2ca45446417ad5d6d5eb33092af8f1
 
   build:
     runs-on: ubuntu-latest
