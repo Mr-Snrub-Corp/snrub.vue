@@ -118,6 +118,12 @@ async function handleReset() {
     });
   } catch (error) {
     console.error("Reset failed:", error);
+    toast.add({
+      severity: "error",
+      summary: "Error",
+      detail: "Something went wrong. Please try again later.",
+      life: 5000,
+    });
   }
 }
 </script>
