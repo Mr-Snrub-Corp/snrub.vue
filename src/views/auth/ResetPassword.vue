@@ -52,6 +52,7 @@
             </div>
             <InputText
               id="password"
+              data-testid="auth.reset-password-form.password-input"
               :type="passwordType"
               v-model="password"
               placeholder="Enter new password"
@@ -97,6 +98,7 @@
             </div>
             <InputText
               id="confirmPassword"
+              data-testid="auth.reset-password-form.confirm-password-input"
               :type="confirmPasswordType"
               v-model="confirmPassword"
               placeholder="Confirm password"
@@ -115,6 +117,7 @@
           </div>
         </div>
         <Button
+          data-testid="auth.reset-password-form.submit-btn"
           type="submit"
           label="Reset Password"
           severity="primary"
