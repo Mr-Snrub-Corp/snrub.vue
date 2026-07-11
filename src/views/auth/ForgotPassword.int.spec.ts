@@ -12,8 +12,8 @@ const blank = { template: "<div />" };
 
 const homerEmail = "chunkylover53@aol.com";
 
-const API = import.meta.env.VITE_API_URL;
 const EMAIL = "auth.forgot-password-form.email-input";
+const SUBMIT_BTN = "auth.forgot-password-form.submit-btn";
 
 const routes: RouteRecordRaw[] = [
   { path: "/auth/login", name: "Login", component: blank },
@@ -39,6 +39,7 @@ describe("ForgotPassword (integration)", () => {
 
     expect(auth.requestReset).toHaveBeenCalledWith({ email: homerEmail });
   });
+
   it("shows a success toast after submit", async () => {
     const { wrapper } = await renderForgotPassword();
 
@@ -57,11 +58,37 @@ describe("ForgotPassword (integration)", () => {
     );
   });
 
-  it("Invalid email blocks submit + shows a validation message", () => {});
+  it("Invalid email blocks submit + shows a validation message", async () => {
+    const { wrapper } = await renderForgotPassword();
 
-  it("Submit button disabled until the form is valid", () => {});
+    await wrapper.find(`[data-testid="${EMAIL}"]`).setValue("chunkylover");
+    await wrapper.find("form").trigger("submit");
+    expect(wrapper.text()).toContain("Please enter a valid email address");
+  });
 
-  it("a11y: aria-invalid / aria-describedby toggle on error", () => {});
+  it("Submit button disabled until the form is valid", async () => {
+    const { wrapper } = await renderForgotPassword();
+
+    expect(wrapper.find(`[data-testid="${SUBMIT_BTN}"]`).attributes("disabled")).toBeDefined();
+
+    await wrapper.find(`[data-testid="${EMAIL}"]`).setValue("chunkylover");
+    expect(wrapper.find(`[data-testid="${SUBMIT_BTN}"]`).attributes("disabled")).toBeDefined();
+
+    await wrapper.find(`[data-testid="${EMAIL}"]`).setValue(homerEmail);
+    expect(wrapper.find(`[data-testid="${SUBMIT_BTN}"]`).attributes("disabled")).toBeUndefined();
+  });
+
+  it("a11y: aria-invalid / aria-describedby toggle on error", async () => {
+    const { wrapper } = await renderForgotPassword();
+
+    await wrapper.find(`[data-testid="${EMAIL}"]`).setValue("chunkylover");
+    await wrapper.find("form").trigger("submit");
+
+    expect(wrapper.find(`[data-testid="${EMAIL}"]`).attributes("aria-invalid")).toBe("true");
+    expect(wrapper.find(`[data-testid="${EMAIL}"]`).attributes("aria-describedby")).toBe(
+      "email-error",
+    );
+  });
 
   it("shows a error toast on request failure", async () => {
     const { wrapper, pinia } = await renderForgotPassword();
