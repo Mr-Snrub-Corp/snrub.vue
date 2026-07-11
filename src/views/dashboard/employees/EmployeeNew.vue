@@ -147,7 +147,9 @@ import { USER_ROLES, USER_STATUS } from "@/constants/enums";
 import { MAX_LENGTH } from "@/constants/validation";
 import { formatLabel } from "@/utils";
 import { useUsersStore } from "@/stores/users";
+import { useToast } from "primevue/usetoast";
 
+const toast = useToast();
 const router = useRouter();
 const usersStore = useUsersStore();
 
@@ -234,6 +236,12 @@ async function handleSubmit() {
     router.push({ name: "employeeDetail", params: { uid: user.uid } });
   } catch (error) {
     console.error("Error creating user:", error);
+    toast.add({
+      severity: "error",
+      summary: "Error",
+      detail: "Something went wrong. Please try again later.",
+      life: 3000,
+    });
   }
 }
 

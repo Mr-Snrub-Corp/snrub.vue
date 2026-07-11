@@ -28,8 +28,8 @@ const routes: RouteRecordRaw[] = [
 
 const EMAIL = "employees.edit-form.email-input";
 const NAME = "employees.edit-form.name-input";
-const UPDATE = "employees.edit-form.update-btn";
-const CANCEL = "employees.edit-form.cancel-btn";
+const UPDATE_BTN = "employees.edit-form.update-btn";
+const CANCEL_BTN = "employees.edit-form.cancel-btn";
 
 function renderEdit(uid = "u1") {
   return renderWithPlugins(EmployeeEdit, {
@@ -75,7 +75,7 @@ describe("EmployeeEdit (integration)", () => {
     await wrapper.find(`[data-testid="${NAME}"]`).setValue("");
     await flushPromises();
 
-    expect(wrapper.find(`[data-testid="${UPDATE}"]`).attributes("disabled")).toBeDefined();
+    expect(wrapper.find(`[data-testid="${UPDATE_BTN}"]`).attributes("disabled")).toBeDefined();
   });
 
   it("calls updateUser with current form data on submit", async () => {
@@ -86,7 +86,7 @@ describe("EmployeeEdit (integration)", () => {
     vi.mocked(store.updateUser).mockResolvedValue(HOMER);
 
     await wrapper.find(`[data-testid="${NAME}"]`).setValue("Bart Simpson");
-    await wrapper.find(`[data-testid="${UPDATE}"]`).trigger("click");
+    await wrapper.find(`[data-testid="${UPDATE_BTN}"]`).trigger("click");
     await flushPromises();
 
     expect(store.updateUser).toHaveBeenCalledWith(
@@ -103,7 +103,7 @@ describe("EmployeeEdit (integration)", () => {
     vi.mocked(store.updateUser).mockResolvedValue(HOMER);
     const push = vi.spyOn(router, "push");
 
-    await wrapper.find(`[data-testid="${UPDATE}"]`).trigger("click");
+    await wrapper.find(`[data-testid="${UPDATE_BTN}"]`).trigger("click");
     await flushPromises();
 
     expect(add).toHaveBeenCalledWith(
@@ -119,7 +119,7 @@ describe("EmployeeEdit (integration)", () => {
     const store = useUsersStore(pinia);
     vi.mocked(store.updateUser).mockRejectedValue(new Error("Network Error"));
 
-    await wrapper.find(`[data-testid="${UPDATE}"]`).trigger("click");
+    await wrapper.find(`[data-testid="${UPDATE_BTN}"]`).trigger("click");
     await flushPromises();
 
     expect(add).toHaveBeenCalledWith(
@@ -132,7 +132,7 @@ describe("EmployeeEdit (integration)", () => {
     await flushPromises();
     const push = vi.spyOn(router, "push");
 
-    await wrapper.find(`[data-testid="${CANCEL}"]`).trigger("click");
+    await wrapper.find(`[data-testid="${CANCEL_BTN}"]`).trigger("click");
 
     expect(push).toHaveBeenCalledWith({ name: "employeeDetail", params: { uid: "u1" } });
   });
