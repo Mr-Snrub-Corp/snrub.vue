@@ -15,12 +15,27 @@ function buildTestRouter() {
     history: createMemoryHistory(),
     routes: [
       { path: "/", name: "home", component: blank },
-      { path: "/auth/login", name: "Login", component: blank, meta: { title: "Sign In | Snrub Corp" } },
+      {
+        path: "/auth/login",
+        name: "Login",
+        component: blank,
+        meta: { title: "Sign In | Snrub Corp" },
+      },
       { path: "/auth/forgot-password", name: "forgotPassword", component: blank },
       { path: "/auth/reset-password", name: "resetPassword", component: blank },
       { path: "/auth/callback", name: "Callback", component: blank },
-      { path: "/dashboard", name: "dashboardHome", component: blank, meta: { title: "Dashboard | Snrub Corp" } },
-      { path: "/dashboard/employees", name: "employees", component: blank, meta: { title: "Employees | Snrub Corp" } },
+      {
+        path: "/dashboard",
+        name: "dashboardHome",
+        component: blank,
+        meta: { title: "Dashboard | Snrub Corp" },
+      },
+      {
+        path: "/dashboard/employees",
+        name: "employees",
+        component: blank,
+        meta: { title: "Employees | Snrub Corp" },
+      },
       {
         path: "/dashboard/employees/new",
         name: "employeeCreate",

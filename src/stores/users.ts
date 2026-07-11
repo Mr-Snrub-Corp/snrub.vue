@@ -22,7 +22,7 @@ export const useUsersStore = defineStore("users", () => {
       const response = await api.users.create(userData);
       users.value.push(response);
       return response;
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(`Error creating user:`, err);
       throw err;
     }
@@ -33,7 +33,7 @@ export const useUsersStore = defineStore("users", () => {
       const response = await api.users.get();
       users.value = response;
       return response;
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error fetching users:", err);
       throw err;
     }
@@ -47,7 +47,7 @@ export const useUsersStore = defineStore("users", () => {
         users.value[index] = { ...users.value[index], ...response };
       }
       return response;
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(`Error fetching user ${uid}:`, err);
       throw err;
     }
@@ -61,7 +61,7 @@ export const useUsersStore = defineStore("users", () => {
         users.value[index] = { ...users.value[index], ...response };
       }
       return response;
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(`Error updating user ${uid}:`, err);
       throw err;
     }
@@ -86,7 +86,7 @@ export const useUsersStore = defineStore("users", () => {
     try {
       await api.users.deleteOne(uid);
       users.value = users.value.filter((user) => user.uid !== uid);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(`Error deleting user ${uid}:`, err);
       throw err;
     }

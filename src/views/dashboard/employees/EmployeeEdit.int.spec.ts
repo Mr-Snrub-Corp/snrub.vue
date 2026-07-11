@@ -51,12 +51,12 @@ describe("EmployeeEdit (integration)", () => {
     const { wrapper } = await renderEdit();
     await flushPromises();
 
-    expect(
-      (wrapper.find(`[data-testid="${EMAIL}"]`).element as HTMLInputElement).value,
-    ).toBe(HOMER.email);
-    expect(
-      (wrapper.find(`[data-testid="${NAME}"]`).element as HTMLInputElement).value,
-    ).toBe(HOMER.name);
+    expect((wrapper.find(`[data-testid="${EMAIL}"]`).element as HTMLInputElement).value).toBe(
+      HOMER.email,
+    );
+    expect((wrapper.find(`[data-testid="${NAME}"]`).element as HTMLInputElement).value).toBe(
+      HOMER.name,
+    );
   });
 
   it("calls fetchUserById with the route uid on mount", async () => {

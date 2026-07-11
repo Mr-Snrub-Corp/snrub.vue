@@ -126,9 +126,9 @@ describe("httpService", () => {
         }),
       );
 
-      await api.users.get(
-        { name: undefined, role: null } as unknown as Parameters<typeof api.users.get>[0],
-      );
+      await api.users.get({ name: undefined, role: null } as unknown as Parameters<
+        typeof api.users.get
+      >[0]);
 
       const params = new URL(capturedUrl).searchParams;
       expect(params.has("name")).toBe(false);
@@ -160,9 +160,7 @@ describe("httpService", () => {
 
     it("throws HttpError with detail string for string detail", async () => {
       server.use(
-        http.get(`${API}/users`, () =>
-          HttpResponse.json({ detail: "Not found" }, { status: 404 }),
-        ),
+        http.get(`${API}/users`, () => HttpResponse.json({ detail: "Not found" }, { status: 404 })),
       );
 
       await expect(api.users.get()).rejects.toThrow("Not found");

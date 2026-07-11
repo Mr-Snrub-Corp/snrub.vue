@@ -5,9 +5,9 @@
 export class HttpError extends Error {
   status: number;
   statusText: string;
-  data: any;
+  data: unknown;
 
-  constructor(message: string, status: number, statusText: string, data?: any) {
+  constructor(message: string, status: number, statusText: string, data?: unknown) {
     super(message);
     this.name = "HttpError";
     this.status = status;
