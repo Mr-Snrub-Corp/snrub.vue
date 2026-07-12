@@ -1,9 +1,13 @@
 import { HttpError } from "@/types/errors";
+import { useAuthStore } from "../stores/auth";
+import router from "@/router";
+
+// internal implementation variable that's never exported and never appears in any public type signature.
+// The any on the internal accumulator has zero impact on type safety outside this file.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const api: { [key: string]: any } = {};
 const baseUrl = import.meta.env.VITE_API_URL; // Example usage of process;
 const headers = { "Content-Type": "application/json" };
-import { useAuthStore } from "../stores/auth";
-import router from "@/router";
 
 // Function that works with both store and fallback to localStorage
 function getHeaders(): Record<string, string> {

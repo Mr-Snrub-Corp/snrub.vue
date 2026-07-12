@@ -26,11 +26,11 @@
       </div>
       <form @submit.prevent="handleReset">
         <div class="flex flex-col gap-2 mb-4">
-          <label for="email2" class="block text-surface-900 dark:text-surface-0 font-medium"
+          <label for="email" class="block text-surface-900 dark:text-surface-0 font-medium"
             >Email</label
           >
           <InputText
-            id="email2"
+            id="email"
             data-testid="auth.forgot-password-form.email-input"
             v-model="formData.email"
             type="text"
@@ -38,10 +38,10 @@
             class="w-full p-4"
             :invalid="v$.email.$error"
             :aria-invalid="v$.email.$error ? 'true' : undefined"
-            :aria-describedby="v$.email.$error ? 'email2-error' : undefined"
+            :aria-describedby="v$.email.$error ? 'email-error' : undefined"
             @blur="v$.email.$touch()"
           />
-          <small v-if="v$.email.$error" id="email2-error" class="text-red-500">
+          <small v-if="v$.email.$error" id="email-error" class="text-red-500">
             {{ v$.email.$errors[0]?.$message }}
           </small>
         </div>
@@ -118,6 +118,12 @@ async function handleReset() {
     });
   } catch (error) {
     console.error("Reset failed:", error);
+    toast.add({
+      severity: "error",
+      summary: "Error",
+      detail: "Something went wrong. Please try again later.",
+      life: 5000,
+    });
   }
 }
 </script>

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { http, HttpResponse } from "msw";
 import type { RouteRecordRaw } from "vue-router";
-import Login from "@/views/Login.vue";
+import Login from "@/views/auth/Login.vue";
 import { renderWithPlugins } from "@/test/renderWithPlugins";
 import { server } from "@/test/msw/server";
 import { useAuthStore } from "@/stores/auth";

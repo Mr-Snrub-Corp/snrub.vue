@@ -25,13 +25,13 @@ const router = createRouter({
         {
           path: "login",
           name: "Login",
-          component: () => import("@/views/Login.vue"),
+          component: () => import("@/views/auth/Login.vue"),
           meta: { title: "Sign In | Snrub Corp" },
         },
         {
           path: "forgot-password",
           name: "forgotPassword",
-          component: () => import("@/views/ForgotPassword.vue"),
+          component: () => import("@/views/auth/ForgotPassword.vue"),
           meta: { title: "Forgot Password | Snrub Corp" },
         },
         {

@@ -162,6 +162,21 @@ Keep this section up to date whenever a new `data-testid` is added or removed.
 | `incidents.types.category-group` | Category group container |
 | `incidents.types.table` | Incident types data table |
 
+### Incidents — `src/views/dashboard/incidents/IncidentReportEdit.vue`
+
+| Test ID | Element |
+|---|---|
+| `incidents.edit-form.update-btn` | Update Report submit button |
+| `incidents.edit-form.cancel-btn` | Cancel button |
+
+### Auth — `src/views/auth/ResetPassword.vue`
+
+| Test ID | Element |
+|---|---|
+| `auth.reset-password-form.password-input` | New password input |
+| `auth.reset-password-form.confirm-password-input` | Confirm password input |
+| `auth.reset-password-form.submit-btn` | Reset Password submit button |
+
 ### Reactor Monitoring — `src/views/dashboard/reactor-monitoring/ReactorMonitoring.vue`
 
 | Test ID | Element |

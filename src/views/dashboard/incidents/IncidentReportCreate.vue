@@ -26,6 +26,7 @@
               option-value="uid"
               placeholder="Select incident type"
               class="w-full"
+              data-testid="incidents.create-form.incident-type-select"
               :invalid="v$.incident_type_id.$error"
               :aria-invalid="v$.incident_type_id.$error ? 'true' : undefined"
               :aria-describedby="v$.incident_type_id.$error ? 'incidentType-error' : undefined"
@@ -183,10 +184,17 @@
           <Button
             label="Create Report"
             severity="primary"
+            data-testid="incidents.create-form.submit-btn"
             :disabled="v$.$invalid"
             @click="handleSubmit"
           />
-          <Button label="Cancel" severity="secondary" variant="outlined" @click="handleCancel" />
+          <Button
+            label="Cancel"
+            severity="secondary"
+            variant="outlined"
+            data-testid="incidents.create-form.cancel-btn"
+            @click="handleCancel"
+          />
         </div>
       </div>
     </div>

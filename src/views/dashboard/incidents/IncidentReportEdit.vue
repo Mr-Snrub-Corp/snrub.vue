@@ -189,12 +189,19 @@
           <!-- Actions -->
           <div class="flex gap-3">
             <Button
+              data-testid="incidents.edit-form.update-btn"
               label="Update Report"
               severity="primary"
               :disabled="v$.$invalid"
               @click="handleSubmit"
             />
-            <Button label="Cancel" severity="secondary" variant="outlined" @click="handleCancel" />
+            <Button
+              data-testid="incidents.edit-form.cancel-btn"
+              label="Cancel"
+              severity="secondary"
+              variant="outlined"
+              @click="handleCancel"
+            />
           </div>
         </div>
       </div>
