@@ -1,4 +1,5 @@
 import { HttpError } from "@/types/errors";
+import type { Actuator } from "@/types/godMode";
 import { useAuthStore } from "../stores/auth";
 import router from "@/router";
 
@@ -127,14 +128,14 @@ api.incidentTypes = generateApi("incident-types");
 api.incidentReports = generateApi("incident-reports");
 api.incidentCategories = generateApi("incident-categories");
 
-// God-mode: super_admin-only lever control over the incident pipeline
-api.godmode = {
-  getLevers: () =>
-    fetch(`${baseUrl}/godmode/levers`, { method: "GET", headers: getHeaders() }).then((res) =>
+// God-mode: super_admin-only actuator commands published to MQTT by the API.
+api.godMode = {
+  getActuators: () =>
+    fetch(`${baseUrl}/godmode/actuators`, { method: "GET", headers: getHeaders() }).then((res) =>
       handleResponse(res),
     ),
-  setLever: <T>(lever: string, data: T) =>
-    fetch(`${baseUrl}/godmode/levers/${lever}`, {
+  setActuator: (actuator: Actuator, data: { value: number }) =>
+    fetch(`${baseUrl}/godmode/actuators/${actuator}`, {
       method: "PUT",
       body: JSON.stringify(data),
       headers: getHeaders(),

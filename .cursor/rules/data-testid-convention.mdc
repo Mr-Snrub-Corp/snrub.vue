@@ -256,3 +256,26 @@ Keep this section up to date whenever a new `data-testid` is added or removed.
 | `alarms.containment-integrity.status-badge` | Containment integrity status badge |
 | `alarms.containment-integrity.ack-btn` | Containment integrity ack button |
 | `alarms.containment-integrity.timestamp` | Containment integrity relative timestamp |
+
+### God Mode — `src/views/dashboard/god-mode/GodMode.vue`
+
+| Test ID | Element |
+|---|---|
+| `god-mode.dashboard.root` | God Mode page root (super_admin) |
+| `god-mode.rod-position.state-tag` | Control rods Nominal/Commanded tag |
+| `god-mode.rod-position.slider` | Control rods slider |
+| `god-mode.rod-position.value-input` | Control rods numeric input |
+| `god-mode.pump-speed.state-tag` | Coolant pump Nominal/Commanded tag |
+| `god-mode.pump-speed.slider` | Coolant pump slider |
+| `god-mode.pump-speed.value-input` | Coolant pump numeric input |
+| `god-mode.steam-valve.state-tag` | Steam valve Nominal/Commanded tag |
+| `god-mode.steam-valve.slider` | Steam valve slider |
+| `god-mode.steam-valve.value-input` | Steam valve numeric input |
+| `god-mode.leak-rate.state-tag` | Coolant leak Active/Off tag |
+| `god-mode.leak-rate.arm-btn` | Coolant leak arm/disarm switch |
+| `god-mode.leak-rate.slider` | Coolant leak slider |
+| `god-mode.leak-rate.value-input` | Coolant leak numeric input |
+| `god-mode.xenon-injection.state-tag` | Xenon inject Active/Off tag |
+| `god-mode.xenon-injection.arm-btn` | Xenon inject arm/disarm switch |
+| `god-mode.xenon-injection.slider` | Xenon inject slider |
+| `god-mode.xenon-injection.value-input` | Xenon inject numeric input |

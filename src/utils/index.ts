@@ -90,3 +90,48 @@ export function formatRelativeTime(iso: string, now: Date): string {
   }
   return `${Math.floor(hours / 24)}d ago`;
 }
+
+/**
+ * Wait `delay` ms after the last call, then run `func`.
+ *
+ * T — inferred type of `func`. `never[]` lets any callback pass in.
+ * Parameters<T> — that callback's args, so the wrapper takes the same ones.
+ * Debounced<T> — callable like T, plus `.cancel()`. `void` because the real
+ *   call happens later; you cannot await the wrapper.
+ * `& { cancel }` — intersection: one value that is both a function and that object.
+ */
+type Debounced<T extends (...args: never[]) => unknown> = ((...args: Parameters<T>) => void) & {
+  cancel: () => void;
+};
+
+export function debounce<T extends (...args: never[]) => unknown>(
+  func: T,
+  delay: number,
+): Debounced<T> {
+  // DOM vs Node disagree on setTimeout's return; this alias covers both.
+  let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
+  function debounced(...args: Parameters<T>) {
+    // 1. Drop the pending timer, if any
+    // Each keystroke cancels the wait that was already running, then starts a new delay from now.
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+
+    // 2. Start a new timer; only the latest call's args survive
+    timeoutId = setTimeout(() => {
+      func(...args); // 3. Run with those args
+      timeoutId = null; // 4. Idle again
+    }, delay);
+  }
+
+  function cancel() {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+      timeoutId = null;
+    }
+  }
+
+  // Merge so the return is a function *with* .cancel — matches Debounced<T>.
+  return Object.assign(debounced, { cancel });
+}
