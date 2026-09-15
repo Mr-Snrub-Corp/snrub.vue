@@ -23,12 +23,6 @@ function getHeaders(): Record<string, string> {
     console.debug("Falling back to localStorage for auth token");
   }
 
-  // Fallback to localStorage
-  // const token = localStorage.getItem('authToken');
-  // return token
-  //   ? { ...headers, "Authorization": `Bearer ${token}` }
-  //   : headers;
-
   // No token: still return the base JSON headers so Content-Type isn't dropped.
   return headers;
 }
@@ -48,10 +42,12 @@ function getAuthHeaders(): Record<string, string> {
 
 async function handleResponse(response: Response) {
   if (!response.ok) {
-    // probably need a try catch here
-    const errorData = await response.json();
-    // Debug what we're getting from the server
-    console.log("Error data from server:", errorData);
+    let errorData;
+    try {
+      errorData = await response.json();
+    } catch {
+      errorData = {};
+    }
 
     let errorMessage = "Something went wrong";
 
@@ -68,9 +64,6 @@ async function handleResponse(response: Response) {
         errorMessage = errorData.detail;
       }
     }
-    // errorMessage = Array.isArray(errorData.detail)
-    //   ? errorData.detail[0].msg
-    //   : errorData.detail || "Something went wrong";
 
     throw new HttpError(errorMessage, response.status, response.statusText, errorData);
   }
