@@ -55,7 +55,13 @@ async function handleLogout() {
 
 onBeforeMount(async () => {
   isLoading.value = true;
-  const requests = [usersStore.fetchUsers(), incidentTypesStore.fetchIncidentTypes()];
+  const requests: Promise<unknown>[] = [
+    usersStore.fetchUsers(),
+    incidentTypesStore.fetchIncidentTypes(),
+  ];
+  if (authStore.isSuperAdmin) {
+    requests.push(godModeStore.fetchActuators().catch(() => undefined));
+  }
 
   await Promise.all(requests);
   isLoading.value = false;

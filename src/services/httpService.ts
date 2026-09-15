@@ -1,4 +1,5 @@
 import { HttpError } from "@/types/errors";
+import type { Actuator } from "@/types/godMode";
 import { useAuthStore } from "../stores/auth";
 import router from "@/router";
 
@@ -22,12 +23,6 @@ function getHeaders(): Record<string, string> {
     console.debug("Falling back to localStorage for auth token");
   }
 
-  // Fallback to localStorage
-  // const token = localStorage.getItem('authToken');
-  // return token
-  //   ? { ...headers, "Authorization": `Bearer ${token}` }
-  //   : headers;
-
   // No token: still return the base JSON headers so Content-Type isn't dropped.
   return headers;
 }
@@ -47,10 +42,12 @@ function getAuthHeaders(): Record<string, string> {
 
 async function handleResponse(response: Response) {
   if (!response.ok) {
-    // probably need a try catch here
-    const errorData = await response.json();
-    // Debug what we're getting from the server
-    console.log("Error data from server:", errorData);
+    let errorData;
+    try {
+      errorData = await response.json();
+    } catch {
+      errorData = {};
+    }
 
     let errorMessage = "Something went wrong";
 
@@ -67,9 +64,6 @@ async function handleResponse(response: Response) {
         errorMessage = errorData.detail;
       }
     }
-    // errorMessage = Array.isArray(errorData.detail)
-    //   ? errorData.detail[0].msg
-    //   : errorData.detail || "Something went wrong";
 
     throw new HttpError(errorMessage, response.status, response.statusText, errorData);
   }
@@ -127,14 +121,14 @@ api.incidentTypes = generateApi("incident-types");
 api.incidentReports = generateApi("incident-reports");
 api.incidentCategories = generateApi("incident-categories");
 
-// God-mode: super_admin-only lever control over the incident pipeline
-api.godmode = {
-  getLevers: () =>
-    fetch(`${baseUrl}/godmode/levers`, { method: "GET", headers: getHeaders() }).then((res) =>
+// God-mode: super_admin-only actuator commands published to MQTT by the API.
+api.godMode = {
+  getActuators: () =>
+    fetch(`${baseUrl}/godmode/actuators`, { method: "GET", headers: getHeaders() }).then((res) =>
       handleResponse(res),
     ),
-  setLever: <T>(lever: string, data: T) =>
-    fetch(`${baseUrl}/godmode/levers/${lever}`, {
+  setActuator: (actuator: Actuator, data: { value: number }) =>
+    fetch(`${baseUrl}/godmode/actuators/${actuator}`, {
       method: "PUT",
       body: JSON.stringify(data),
       headers: getHeaders(),

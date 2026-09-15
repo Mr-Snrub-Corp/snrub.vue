@@ -1,54 +1,60 @@
 import { defineStore } from "pinia";
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import api from "@/services/httpService";
-import type { GodModeLever, LeverState } from "@/types/godMode";
-import type { IncidentStatus } from "@/types/incidentReport";
+import { ACTUATORS, type Actuator, type ActuatorState } from "@/types/godMode";
+
+function nominals(): Record<string, number> {
+  return Object.fromEntries(ACTUATORS.map((a) => [a.name, a.nominal]));
+}
 
 export const useGodModeStore = defineStore("godMode", () => {
-  // State: lever key -> current state
-  const levers = ref<Record<string, LeverState>>({});
+  const positions = ref<Record<string, number>>(nominals());
+  const lastPersisted = ref<Record<string, number>>(nominals());
 
-  // Getters
-  const getAllLevers = computed(() => Object.values(levers.value));
-  const getLeverState = computed(() => (lever: GodModeLever) => levers.value[lever]);
-
-  // Actions
-  async function fetchLevers() {
+  async function fetchActuators() {
     try {
-      const response: LeverState[] = await api.godmode.getLevers();
-      const map: Record<string, LeverState> = {};
+      const response: ActuatorState[] = await api.godMode.getActuators();
+      const map: Record<string, number> = { ...positions.value };
       response.forEach((state) => {
-        map[state.lever] = state;
+        map[state.actuator] = state.value;
       });
-      levers.value = map;
+      positions.value = map;
+      lastPersisted.value = { ...map };
       return response;
     } catch (err) {
-      console.error("Error fetching god-mode levers:", err);
+      console.error("Error fetching god-mode actuators:", err);
       throw err;
     }
   }
 
-  async function setLever(lever: GodModeLever, status: IncidentStatus) {
+  function setPosition(actuator: Actuator, value: number) {
+    positions.value[actuator] = value;
+  }
+
+  async function setActuator(actuator: Actuator, value: number) {
+    setPosition(actuator, value);
     try {
-      const response: LeverState = await api.godmode.setLever(lever, { status });
-      levers.value[response.lever] = response;
-      return response;
+      await api.godMode.setActuator(actuator, { value });
+      lastPersisted.value[actuator] = value;
     } catch (err) {
-      console.error(`Error setting god-mode lever ${lever}:`, err);
+      setPosition(actuator, lastPersisted.value[actuator]);
+      console.error("Error setting god-mode actuator:", err);
       throw err;
     }
   }
 
   function $reset() {
-    levers.value = {};
+    const next = nominals();
+    positions.value = next;
+    lastPersisted.value = { ...next };
   }
 
   return {
-    levers,
-    getAllLevers,
-    getLeverState,
-    fetchLevers,
-    setLever,
+    positions,
+    lastPersisted,
+    setPosition,
+    setActuator,
+    fetchActuators,
     $reset,
   };
 });

@@ -1,26 +1,57 @@
-import type { IncidentStatus } from "./incidentReport";
+export type ActuatorKind = "command" | "fault";
 
-// God-mode lever keys (mirror app/models/godmode.py GodModeLever)
-export const GOD_MODE_LEVER = {
-  COOLANT_FLOW: "coolant_flow",
-  CONTROL_ROD: "control_rod",
-  PRIMARY_COOLANT_LOSS: "primary_coolant_loss",
-  STEAM_PRESSURE: "steam_pressure",
-  XENON: "xenon",
-} as const;
+export const ACTUATORS = [
+  {
+    name: "rod_position",
+    label: "Control rods",
+    kind: "command",
+    min: 0,
+    max: 100,
+    nominal: 50,
+    testId: "god-mode.rod-position",
+  },
+  {
+    name: "pump_speed",
+    label: "Coolant pump",
+    kind: "command",
+    min: 0,
+    max: 100,
+    nominal: 80,
+    testId: "god-mode.pump-speed",
+  },
+  {
+    name: "steam_valve",
+    label: "Steam valve",
+    kind: "command",
+    min: 0,
+    max: 100,
+    nominal: 50,
+    testId: "god-mode.steam-valve",
+  },
+  {
+    name: "leak_rate",
+    label: "Coolant leak",
+    kind: "fault",
+    min: 0,
+    max: 100,
+    nominal: 0,
+    testId: "god-mode.leak-rate",
+  },
+  {
+    name: "xenon_injection",
+    label: "Xenon inject",
+    kind: "fault",
+    min: 0,
+    max: 100,
+    nominal: 0,
+    testId: "god-mode.xenon-injection",
+  },
+] as const;
 
-export type GodModeLever = (typeof GOD_MODE_LEVER)[keyof typeof GOD_MODE_LEVER];
+export type Actuator = (typeof ACTUATORS)[number]["name"];
 
-export interface LeverState {
-  lever: GodModeLever;
-  incident_type_code: string;
-  active: boolean;
-  status: IncidentStatus | null;
-  intensity: number;
-  report_uid: string | null;
-}
-
-export interface LeverSetRequest {
-  status: IncidentStatus;
-  severity?: number;
+export interface ActuatorState {
+  actuator: Actuator;
+  value: number;
+  kind: ActuatorKind;
 }

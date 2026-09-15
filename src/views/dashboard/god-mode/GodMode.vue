@@ -5,180 +5,183 @@
         <i class="pi pi-bolt text-3xl text-primary" aria-hidden="true" />
         <h1 class="text-3xl font-bold text-surface-900 dark:text-surface-0">God Mode</h1>
       </div>
-      <p class="mb-6 text-surface-600 dark:text-surface-300">
-        Steer reactor telemetry directly. Each lever drives a malfunction incident; its position
-        sets the impact intensity. Set a lever to <b>Off</b> to clear it.
+      <p class="mb-8 text-surface-600 dark:text-surface-300">
+        Command plant actuators over REST. Commands set operating points; faults inject
+        malfunctions. Incidents are emitted by the backend on sustained excursion — not by these
+        controls.
       </p>
 
-      <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-        <Card v-for="lever in LEVERS" :key="lever.key" class="lever-card">
-          <template #title>
-            <div class="flex items-center justify-between gap-2">
-              <div class="flex items-center gap-2">
-                <i :class="[lever.icon, 'text-xl text-primary']" aria-hidden="true" />
-                <span class="text-lg font-semibold">{{ lever.label }}</span>
+      <section
+        v-for="section in sections"
+        :key="section.kind"
+        class="mb-10 last:mb-0"
+        :aria-labelledby="`${section.kind}-heading`"
+      >
+        <div class="mb-4 flex items-center gap-2">
+          <i :class="[section.icon, 'text-xl text-primary']" aria-hidden="true" />
+          <h2
+            :id="`${section.kind}-heading`"
+            class="text-xl font-semibold text-surface-900 dark:text-surface-0"
+          >
+            {{ section.title }}
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <Card v-for="a in section.items" :key="a.name">
+            <template #title>
+              <div class="flex items-center justify-between gap-2">
+                <span class="text-lg font-semibold">{{ a.label }}</span>
+                <Tag
+                  :value="statusTag(a).value"
+                  :severity="statusTag(a).severity"
+                  :data-testid="`${a.testId}.state-tag`"
+                />
               </div>
-              <Tag
-                :value="statusFor(lever.key).active ? 'Active' : 'Off'"
-                :severity="statusFor(lever.key).active ? 'danger' : 'secondary'"
-                :data-testid="`god-mode.${lever.key}.state-tag`"
-              />
-            </div>
-          </template>
-          <template #subtitle>
-            <span class="text-surface-500 dark:text-surface-400 text-sm">
-              {{ lever.incidentTypeCode }}
-            </span>
-          </template>
-          <template #content>
-            <div class="flex flex-col gap-3">
-              <Select
-                :model-value="positions[lever.key]"
-                :options="STATUS_OPTIONS"
-                option-label="label"
-                option-value="value"
-                class="w-full"
-                :aria-label="`${lever.label} intensity`"
-                :data-testid="`god-mode.${lever.key}.position-select`"
-                @update:model-value="(value: IncidentStatus) => onChange(lever.key, value)"
-              />
-              <div class="flex items-center justify-between text-sm">
-                <span class="text-surface-500 dark:text-surface-400">Intensity</span>
-                <span
-                  class="font-mono font-semibold text-surface-900 dark:text-surface-0"
-                  :data-testid="`god-mode.${lever.key}.intensity`"
-                >
-                  {{ statusFor(lever.key).intensity.toFixed(2) }}
-                </span>
+            </template>
+            <template #subtitle>
+              <span class="text-sm text-surface-500 dark:text-surface-400">
+                Nominal {{ a.nominal }}%
+              </span>
+            </template>
+            <template #content>
+              <div class="flex flex-col gap-4">
+                <!-- Fault: arm/disarm toggle only -->
+                <div v-if="a.kind === 'fault'" class="flex items-center justify-between">
+                  <span class="text-sm text-surface-500 dark:text-surface-400">Arm fault</span>
+                  <ToggleSwitch
+                    :model-value="localPositions[a.name] > 0"
+                    :aria-label="`Arm ${a.label}`"
+                    :data-testid="`${a.testId}.arm-btn`"
+                    @update:model-value="(on: boolean) => onFaultToggle(a.name, on)"
+                  />
+                </div>
+
+                <!-- Command: slider + numeric input -->
+                <template v-else>
+                  <Slider
+                    v-model="localPositions[a.name]"
+                    class="w-full"
+                    :min="a.min"
+                    :max="a.max"
+                    :aria-label="a.label"
+                    :data-testid="`${a.testId}.slider`"
+                    @slideend="void persistActuator(a.name)"
+                  />
+                  <div class="flex items-center gap-2">
+                    <div class="w-24">
+                      <InputNumber
+                        v-model="localPositions[a.name]"
+                        input-class="w-full"
+                        :min="a.min"
+                        :max="a.max"
+                        :min-fraction-digits="0"
+                        :max-fraction-digits="0"
+                        :use-grouping="false"
+                        :aria-label="`${a.label} value`"
+                        :data-testid="`${a.testId}.value-input`"
+                        @update:model-value="onValueInput(a.name)"
+                      />
+                    </div>
+                    <span class="text-sm text-surface-500 dark:text-surface-400">%</span>
+                  </div>
+                </template>
               </div>
-            </div>
-          </template>
-        </Card>
-      </div>
+            </template>
+          </Card>
+        </div>
+      </section>
     </div>
   </PageShell>
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, reactive } from "vue";
+import { onBeforeUnmount, ref } from "vue";
 import Card from "primevue/card";
-import Select from "primevue/select";
+import InputNumber from "primevue/inputnumber";
+import Slider from "primevue/slider";
 import Tag from "primevue/tag";
+import ToggleSwitch from "primevue/toggleswitch";
 import { useToast } from "primevue/usetoast";
 import PageShell from "@/components/layout/PageShell.vue";
 import { useAuthStore } from "@/stores/auth";
 import { useGodModeStore } from "@/stores/godMode";
-import { GOD_MODE_LEVER, type GodModeLever, type LeverState } from "@/types/godMode";
-import type { IncidentStatus } from "@/types/incidentReport";
-import { INCIDENT_STATUS } from "@/constants/enums";
+import { ACTUATORS, type Actuator } from "@/types/godMode";
+import { HttpError } from "@/types/errors";
 import { TOAST_LIFE } from "@/constants/toast";
+import { debounce } from "@/utils";
+
+const FAULT_RESTORE_DEFAULT = 50;
+const PERSIST_DEBOUNCE_MS = 250;
 
 const authStore = useAuthStore();
 const godModeStore = useGodModeStore();
 const toast = useToast();
 
-// Off maps to "resolved" (STATUS_WEIGHT 0.0). Positions ordered by ascending intensity.
-const OFF_STATUS: IncidentStatus = INCIDENT_STATUS.RESOLVED;
+const commands = ACTUATORS.filter((a) => a.kind === "command");
+const faults = ACTUATORS.filter((a) => a.kind === "fault");
 
-const STATUS_OPTIONS: { label: string; value: IncidentStatus }[] = [
-  { label: "Off", value: INCIDENT_STATUS.RESOLVED },
-  { label: "Contained (0.2)", value: INCIDENT_STATUS.CONTAINED },
-  { label: "Reported (0.3)", value: INCIDENT_STATUS.REPORTED },
-  { label: "Mitigation (0.5)", value: INCIDENT_STATUS.MITIGATION_IN_PROGRESS },
-  { label: "Under Review (0.6)", value: INCIDENT_STATUS.UNDER_REVIEW },
-  { label: "Confirmed (1.0)", value: INCIDENT_STATUS.CONFIRMED },
+const sections = [
+  { kind: "command" as const, title: "Commands", icon: "pi pi-sliders-h", items: commands },
+  { kind: "fault" as const, title: "Faults", icon: "pi pi-exclamation-triangle", items: faults },
 ];
 
-const LEVERS: {
-  key: GodModeLever;
-  label: string;
-  icon: string;
-  incidentTypeCode: string;
-}[] = [
-  {
-    key: GOD_MODE_LEVER.COOLANT_FLOW,
-    label: "Coolant Flow",
-    icon: "pi pi-filter",
-    incidentTypeCode: "coolant_flow_reduction",
-  },
-  {
-    key: GOD_MODE_LEVER.CONTROL_ROD,
-    label: "Control Rod Anomaly",
-    icon: "pi pi-sliders-v",
-    incidentTypeCode: "control_rod_anomaly",
-  },
-  {
-    key: GOD_MODE_LEVER.PRIMARY_COOLANT_LOSS,
-    label: "Primary Coolant Loss",
-    icon: "pi pi-tint",
-    incidentTypeCode: "primary_coolant_loss",
-  },
-  {
-    key: GOD_MODE_LEVER.STEAM_PRESSURE,
-    label: "Steam Pressure",
-    icon: "pi pi-gauge",
-    incidentTypeCode: "steam_pressure_anomaly",
-  },
-  {
-    key: GOD_MODE_LEVER.XENON,
-    label: "Xenon Buildup",
-    icon: "pi pi-cloud",
-    incidentTypeCode: "xenon_poisoning_instability",
-  },
-];
+const localPositions = ref<Record<string, number>>({ ...godModeStore.positions });
 
-// Local model of each Select's position (defaults to Off).
-const positions = reactive<Record<string, IncidentStatus>>(
-  Object.fromEntries(LEVERS.map((l) => [l.key, OFF_STATUS])),
+const persistByName: Record<string, ReturnType<typeof debounce<() => void>>> = Object.fromEntries(
+  commands.map((a) => [a.name, debounce(() => void persistActuator(a.name), PERSIST_DEBOUNCE_MS)]),
 );
 
-function statusFor(lever: GodModeLever): LeverState {
-  return (
-    godModeStore.getLeverState(lever) ?? {
-      lever,
-      incident_type_code: "",
-      active: false,
-      status: null,
-      intensity: 0,
-      report_uid: null,
-    }
-  );
+function statusTag(a: (typeof ACTUATORS)[number]) {
+  if (a.kind === "fault") {
+    const active = localPositions.value[a.name] > 0;
+    return { value: active ? "Active" : "Off", severity: active ? "danger" : "secondary" };
+  }
+  const nominal = localPositions.value[a.name] === a.nominal;
+  return { value: nominal ? "Nominal" : "Commanded", severity: nominal ? "secondary" : "info" };
 }
 
-async function onChange(lever: GodModeLever, status: IncidentStatus) {
-  positions[lever] = status;
+function onValueInput(name: Actuator) {
+  const value = localPositions.value[name];
+  if (value === null || value === undefined) {
+    return;
+  }
+  persistByName[name]();
+}
+
+function onFaultToggle(name: Actuator, on: boolean) {
+  const next = on ? FAULT_RESTORE_DEFAULT : 0;
+  localPositions.value[name] = next;
+  godModeStore.setPosition(name, next);
+  void persistActuator(name);
+}
+
+async function persistActuator(name: Actuator) {
+  const value = localPositions.value[name];
   try {
-    const result = await godModeStore.setLever(lever, status);
-    // Reflect server truth: an inactive lever snaps back to Off.
-    positions[lever] = result.active && result.status ? result.status : OFF_STATUS;
-  } catch {
+    await godModeStore.setActuator(name, value);
+  } catch (err) {
+    localPositions.value[name] = godModeStore.positions[name];
     toast.add({
       severity: "error",
       summary: "Error",
-      detail: "Failed to set lever",
+      detail:
+        err instanceof HttpError && err.status === 503
+          ? "Plant broker unavailable"
+          : "Failed to set actuator",
       life: TOAST_LIFE,
     });
-    // Restore from store state on failure.
-    positions[lever] = statusFor(lever).status ?? OFF_STATUS;
   }
 }
 
-onBeforeMount(async () => {
-  try {
-    await godModeStore.fetchLevers();
-    for (const lever of LEVERS) {
-      const state = statusFor(lever.key);
-      positions[lever.key] = state.active && state.status ? state.status : OFF_STATUS;
+onBeforeUnmount(() => {
+  for (const a of commands) {
+    persistByName[a.name].cancel();
+    const value = localPositions.value[a.name];
+    godModeStore.setPosition(a.name, value);
+    if (value !== godModeStore.lastPersisted[a.name]) {
+      void persistActuator(a.name);
     }
-  } catch {
-    toast.add({
-      severity: "error",
-      summary: "Error",
-      detail: "Failed to load levers",
-      life: TOAST_LIFE,
-    });
   }
 });
 </script>
-
-<style scoped></style>
